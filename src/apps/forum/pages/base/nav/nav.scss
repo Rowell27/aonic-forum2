@@ -1,0 +1,17 @@
+base-nav {
+    header {
+        background-color: dodgerblue;
+        margin: -30px -30px 20px;          
+        nav {
+            padding: 20px;                    
+            span {
+                background-color: deepskyblue;
+                color: white;
+                padding: 10px 20px;
+                border-radius: 50px;
+                display: inline-block;
+                cursor: pointer;
+            }
+        }
+    }
+}

@@ -1,0 +1,47 @@
+<base-nav></base-nav>
+
+<section *ngIf=" !loginData ">
+    <h3>Not a member...</h3>
+    <div class="container-fluid">
+        <div class="container-fluid">
+        <p>You must have an account to view this content. <br />
+        <button class="btn btn-link btn-md" routerLink="/login">Log-in</button> or
+        <button class="btn btn-link btn-md" routerLink="/register">Create an Account</button>
+        if you don't have one.</p>
+    </div>
+    </div>
+</section>
+
+<section *ngIf=" loginData ">
+    <h3>Create a New Category...</h3>
+
+    <div class="container-fluid">
+        <form>
+            <div class="form-group">
+                <label>Category ID</label>
+                <input *ngIf="!paramData" type="text" class="form-control" name="id" [(ngModel)]="category.ID">
+                <input *ngIf="paramData" disabled type="text" class="form-control" name="id" [(ngModel)]="category.ID">
+            </div>
+            
+            <div class="form-group">
+                <label>Category Name</label>
+                <input type="text" class="form-control" name="name" [(ngModel)]="category.name">
+            </div>
+
+            <div class="form-group">
+                <label>Category Title</label>
+                <input type="text" class="form-control" name="title" [(ngModel)]="category.title">
+            </div>
+
+            <div class="form-group">
+                <label>Category Description</label>
+                <input type="text" class="form-control" name="description" [(ngModel)]="category.description">
+            </div>
+        </form>
+        
+        <button class="btn btn-primary" *ngIf="!paramData" (click)="onClickAddCategory()">Create Category</button>
+        <button class="btn btn-warning" *ngIf="paramData" (click)="onClickUpdateCategory()">Update Category</button>
+        <button class="btn btn-info" *ngIf="paramData" (click)="onClickBackToCategory()">Back to Category</button>
+        
+    </div>
+</section>

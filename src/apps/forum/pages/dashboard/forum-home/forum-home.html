@@ -1,0 +1,41 @@
+<base-nav></base-nav>
+
+<section *ngIf=" !loginData ">
+    <h3>Not a member...</h3>
+    <div class="container-fluid">
+        <p>You must have an account to view this content. <br /> Please
+        <button class="btn btn-link btn-md" routerLink="/login">Log-in</button> or
+        <button class="btn btn-link btn-md" routerLink="/register">Create an Account</button>
+        if you don't have one.</p>
+    </div>
+</section>
+
+<section *ngIf=" loginData ">
+    
+        <h3>Dashboard 
+            <span class="info-right"> Logged in as: <b>{{ loginData.name }}</b> </span>
+        </h3>
+        <hr />
+
+    <div class="container">
+        <div class="card-block">
+            <h4 class="card-title">
+                List of Categories 
+                <button class="btn btn-primary btn-sm btn-pos-right" routerLink="/forum-edit-category">
+                    New Category
+                </button>            
+            </h4>
+        </div>
+
+        <div class="container-fluid">
+            <ul class="list-group list-group-flush" *ngFor="let id of categories">
+                <li class="list-group-item">
+                    {{ list_category[id].title }}
+                    <button class="btn btn-success btn-sm btn-pos-right" (click)="onClickViewCategory(id)">
+                        View Category
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </div>
+</section>

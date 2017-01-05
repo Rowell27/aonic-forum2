@@ -1,0 +1,42 @@
+<base-nav></base-nav>
+
+<section *ngIf=" !loginData ">
+    <h3>Not a member...</h3>
+    <div class="container-fluid">
+        <div class="container-fluid">
+            <p>You must have an account to view this content. <br /> Please 
+            <button class="btn btn-link btn-md" routerLink="/login">Log-in</button> or
+            <button class="btn btn-link btn-md" routerLink="/register">Create an Account</button>
+            if you don't have one.</p>
+        </div>
+    </div>
+</section>
+
+<section *ngIf=" loginData ">
+    <div class="container">
+        <h3>{{ category.title }}</h3>
+
+        <div class="container-fluid">
+            <p>Author:  {{ category.author }}</p>
+            <p>Description:  {{ category.description }}</p>
+            
+            <button class="btn btn-primary btn-sm" (click)="onClickViewAddPost()">New Post</button>
+            <button class="btn btn-warning btn-sm" (click)="onClickViewEditCategory()">Edit Category</button>
+            <button class="btn btn-danger btn-sm" (click)="onClickDeleteCategory()">Delete Category</button> 
+            <hr>
+
+            <div class="container-fluid">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        Sample post 1
+                        <!--<button class="btn btn-danger btn-sm btn-pos-right">Delete Thread</button>                        -->
+                        <button class="btn btn-success btn-sm btn-pos-right" (click)="onClickViewCategory(id)">
+                            View Post
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+</section>

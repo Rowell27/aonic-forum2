@@ -1,0 +1,25 @@
+<base-nav></base-nav>
+
+<div class="container fluid">
+
+    <section *ngIf=" ! loginData ">
+        <div class="jumbotron">
+            <h3>Login</h3>
+        </div>
+    
+        <form>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="text" class="form-control" name="email" [(ngModel)]="userData.email">
+            </div>
+            
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" class="form-control" name="password" [(ngModel)]="userData.password">        
+            </div>
+        </form>
+        <span *ngIf="error" class="alert-danger">Error: {{ error }}</span><br>
+        <button class="btn btn-primary " (click)="onClickLoginUser()">Login</button>
+    </section>
+        
+</div>
