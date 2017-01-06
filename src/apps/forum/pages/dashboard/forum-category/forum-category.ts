@@ -16,14 +16,17 @@ import { CATEGORY_DATA } from '../../../app/firebase-interface';
 export class ForumCategoryPage {
 
     category = <CATEGORY_DATA> {}
-    loginData: USER_DATA = null;
+    key: string;
     ref;
     category_ID: string;
 
-    constructor( private routes: ActivatedRoute, private router: Router, private fireService : FireBaseService ) {
+    constructor( private routes: ActivatedRoute, 
+                 private router: Router, 
+                 private fireService : FireBaseService ) {
+                     
         this.ref = fireService._database().ref("category")
 
-        this.isLoggedIn();
+        this.checkLoggedIn();
         this.getCategoryData();
     }
 
@@ -33,10 +36,10 @@ export class ForumCategoryPage {
         });
     }
 
-    isLoggedIn(){
-        this.loginData = JSON.parse( localStorage.getItem("login_data") );
-        if ( !this.loginData ) return;
-        this.getParamData();
+    checkLoggedIn(){
+        this.fireService.isLoggedIn( re => {
+            this.key = re;
+        }, error => console.info( "Alert! ", error ) );
     }
 
     getCategoryData(){

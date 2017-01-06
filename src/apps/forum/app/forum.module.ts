@@ -6,7 +6,6 @@ import { BaseModule } from '../pages/base/base.module';
 
 import { LoginPage } from '../pages/auth/login/login';
 import { RegisterPage } from '../pages/auth/register/register';
-import { UserSettingsPage } from '../pages/auth/user-settings/user-settings';
 import { ForumHomePage } from '../pages/dashboard/forum-home/forum-home';
 import { ForumCategoryPage } from '../pages/dashboard/forum-category/forum-category';
 import { ForumEditCategoryPage } from '../pages/dashboard/forum-category/forum-edit-category/forum-edit-category';
@@ -19,7 +18,6 @@ const appRoutes: Routes = [
     { path: 'login', component: LoginPage },
     { path: 'register', component: RegisterPage },
     { path: 'forum-home', component: ForumHomePage },
-    { path: 'user-settings', component: UserSettingsPage }, 
     { path: 'forum-category/:id', component: ForumCategoryPage },    
     { path: 'forum-edit-category', component: ForumEditCategoryPage },     
     { path: 'forum-edit-category/:id', component: ForumEditCategoryPage },
@@ -33,7 +31,6 @@ const appRoutes: Routes = [
     declarations: [
         LoginPage,
         RegisterPage,
-        UserSettingsPage,
         ForumHomePage,
         ForumCategoryPage,
         ForumEditCategoryPage,

@@ -13,7 +13,7 @@ import { USER_DATA, USER_LOGIN_DATA } from '../../../app/firebase-interface';
 export class RegisterPage {
 
     userData = <USER_DATA> {}
-    key:string;
+    key;
     error;
     ref;
     data = {};
@@ -52,19 +52,23 @@ export class RegisterPage {
         } )
     }
 
-    onClickGetUser(){
-        console.log('fhae5kC5f8f0sSp0bCaYh4OctKF2 ' + this.key)
-        this.fireService.get( this.key , "users", snapshot => {
-            alert( "Snapshot: " + JSON.stringify(snapshot) )
-        }, error => console.log( "Error ", error ) )
-    }
-
     onClickUpdateUser(){
         this.fireService.update( this.userData, this.key, "users", () => {
-            this.fireService.updateUserEmail( this.userData.email, () => {
-                alert( "Update success!" );
-            }, error => console.log( "Unable to update email: ", error ) );
+            alert( "Update success!" );
         }, error => console.log( "Unable to update user: ", error ) );
+    }
+
+    onClickResetPassword(){
+        this.fireService.resetUserPassword( () => {
+            alert( "A reset configuration is already sent to your email address." )
+        }, error => alert( "Unable to send reset configuration to email" ) );
+    }
+
+    onClickDeleteUserAccount(){
+        this.fireService.deleteUser( this.key, "users", () => {
+            alert( "Account deleted!" );
+            this.router.navigate( ['/login'] );
+        }, error => console.log( "Unable to delete account" ) );
     }
 
 }   

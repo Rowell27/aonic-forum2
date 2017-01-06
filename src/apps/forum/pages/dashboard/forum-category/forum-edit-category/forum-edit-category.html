@@ -1,6 +1,6 @@
 <base-nav></base-nav>
 
-<section *ngIf=" !loginData ">
+<section *ngIf=" !key ">
     <h3>Not a member...</h3>
     <div class="container-fluid">
         <div class="container-fluid">
@@ -12,7 +12,7 @@
     </div>
 </section>
 
-<section *ngIf=" loginData ">
+<section *ngIf=" key ">
     <h3>Create a New Category...</h3>
 
     <div class="container-fluid">

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { USER_DATA } from '../../../app/firebase-interface';
+import { FireBaseService } from '../../../app/firebase-service';
 
 @Component({
     selector: 'base-nav',
@@ -9,27 +9,21 @@ import { USER_DATA } from '../../../app/firebase-interface';
 
 export class BaseNav {
 
-    loginData: USER_DATA = null;
+    key;
 
-    constructor( private router: Router ) { 
-        this.isLoggedIn();
+    constructor( private router: Router,
+                 private fireService: FireBaseService ) { 
+        this.checkLoggedIn();
     }
 
-    getUserData(){
-        this.loginData = JSON.parse(localStorage.getItem("SESSION_ID"));        
-    }
-
-    isLoggedIn(){
-        this.getUserData();
-        if ( !this.loginData ) return;
+    checkLoggedIn(){
+        this.fireService.isLoggedIn( re => {
+            this.key = re;
+        }, error => console.info( "Alert! ", error ) );
     }
 
     onClickLogoutUser(){
-        this.getUserData();
-
-        if ( !this.loginData ) return; 
-                
-        localStorage.removeItem('SESSION_ID');
+        this.fireService.logout();
         this.router.navigate( ['/login'] );
     }
 
