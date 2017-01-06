@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import * as firebase from 'firebase';
-
+import { FireBaseService } from '../../../app/firebase-service';
 import {  USER_DATA } from '../../../app/firebase-interface';
 
 @Component({
@@ -11,39 +10,39 @@ import {  USER_DATA } from '../../../app/firebase-interface';
 
 export class UserSettingsPage{
 
-    loginData: USER_DATA = null;
-    auth = firebase.auth()
-    userRef = firebase.database().ref("users")
+    key: string;
 
-    constructor( private router: Router) {
-        this.isLoggedIn();
+    constructor( private router: Router,
+                 private fireService: FireBaseService) {
+        this.checkLoggedIn();
     }
 
-    isLoggedIn(){
-        this.loginData = JSON.parse(localStorage.getItem("login_data"));  
-        if ( !this.loginData ) return;
+    checkLoggedIn(){
+        this.fireService.isLoggedIn( re => {
+            this.key = re;
+        }, error => console.info( "Alert! ", error ) );
     }
 
     onClickResetPassword(){
-        let email = this.loginData.email;
+        // let email = this.loginData.email;
 
-        this.auth.sendPasswordResetEmail( email )
-            .then( () => alert( "A reset configuration is already sent to your account." ),
-                    err => console.log("Failed to Send Reset" , err) );
+        // this.auth.sendPasswordResetEmail( email )
+        //     .then( () => alert( "A reset configuration is already sent to your account." ),
+        //             err => console.log("Failed to Send Reset" , err) );
     }
 
     onClickDeleteUserAccount(){
-        let user = this.auth.currentUser;
+        // let user = this.auth.currentUser;
 
-        user.delete()
-            .then( () => {
-                    alert( "Account successfully deleted" );
+        // user.delete()
+        //     .then( () => {
+        //             alert( "Account successfully deleted" );
 
-                    this.userRef
-                        .child( this.loginData.uid )
-                        .remove( err => console.log( "Unable to delete user data from db. ", err ) );
-                    localStorage.removeItem( 'login_data' );
-                    this.router.navigate( ['/login'] );
-                }, err => alert( "Unable to delete account" ));
+        //             this.userRef
+        //                 .child( this.loginData.uid )
+        //                 .remove( err => console.log( "Unable to delete user data from db. ", err ) );
+        //             localStorage.removeItem( 'login_data' );
+        //             this.router.navigate( ['/login'] );
+        //         }, err => alert( "Unable to delete account" ));
     }
 }

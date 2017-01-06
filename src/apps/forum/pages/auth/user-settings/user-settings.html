@@ -1,6 +1,6 @@
 <base-nav></base-nav>
 
-<section *ngIf=" !loginData ">
+<section *ngIf=" !key ">
     <h3>Not a member...</h3>
     <div class="container-fluid">
         <p>You must have an account to view this content. <br /> Please
@@ -10,7 +10,7 @@
     </div>
 </section>
 
-<section *ngIf=" loginData ">
+<section *ngIf=" key ">
     <div class="container-fluid">
         <h3>User Settings</h3>
         <div class="container">

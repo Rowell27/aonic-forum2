@@ -1,9 +1,9 @@
 <header>
     <nav>
-        <span *ngIf="!loginData" routerLink="/login">Login</span>        
-        <span *ngIf="!loginData" routerLink="/register">Register</span>
-        <span *ngIf="loginData" routerLink="/forum-home">Dashboard</span>        
-        <span *ngIf="loginData" routerLink="/user-settings">User Settings</span>
-        <span *ngIf="loginData" (click)="onClickLogoutUser()">Logout</span>        
+        <span *ngIf="!loginData" routerLink="/login"><i class="fa fa-sign-in fa-lg"></i> Login</span>        
+        <span *ngIf="!loginData" routerLink="/register"><i class="fa fa-user-plus fa-lg"></i> Register</span>
+        <span *ngIf="loginData" routerLink="/forum-home"><i class="fa fa-home fa-lg"></i> Dashboard</span>        
+        <span *ngIf="loginData" routerLink="/user-settings"><i class="fa fa-cog fa-lg"></i> User Settings</span>
+        <span *ngIf="loginData" (click)="onClickLogoutUser()"><i class="fa fa-sign-out fa-lg"></i> Logout</span>        
     </nav>
 </header>

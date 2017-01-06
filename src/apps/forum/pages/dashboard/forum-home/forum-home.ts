@@ -22,7 +22,6 @@ export class ForumHomePage implements OnInit {
     constructor( private router: Router, private fireService : FireBaseService ) {
         this.ref = fireService._database().ref("category")
         this.checkLoggedIn();
-        console.info('logindata ' + this.loginData)
     }
     
     ngOnInit(){
@@ -32,7 +31,6 @@ export class ForumHomePage implements OnInit {
     checkLoggedIn(){
         this.fireService.isLoggedIn( re => {
             this.loginData = re;
-            // alert( "Already logged in as " + this.loginData.email + "." );
         }, error => console.log( "Error: ", error ) );
     }
 

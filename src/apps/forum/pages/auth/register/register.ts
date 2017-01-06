@@ -13,7 +13,7 @@ import { USER_DATA, USER_LOGIN_DATA } from '../../../app/firebase-interface';
 export class RegisterPage {
 
     userData = <USER_DATA> {}
-    loginData: USER_LOGIN_DATA = null;
+    key:string;
     error;
     ref;
     data = {};
@@ -21,7 +21,6 @@ export class RegisterPage {
     constructor( private router: Router, 
                  private fireService : FireBaseService,
                  private ngZone: NgZone ) {
-        this.ref = fireService._database().ref("users")
         this.checkLoggedIn();
     }
     
@@ -32,16 +31,20 @@ export class RegisterPage {
     }
 
     checkLoggedIn(){
-        this.fireService.isLoggedIn( key => {
-            alert( "Already logged in..." );
-            this.router.navigate( ['/forum-home'] );
-        }, error => console.log( error) );
+        this.fireService.isLoggedIn( re => {
+            console.log( "Session ID: " , re )
+            this.key = re;
+            this.fireService.get( this.key, "users", data => {
+                this.userData = data;
+            }, error => console.log( "Unable to retrieved user data from server. Error: ", error ) );
+        }, error => console.info( "Alert! ", error ) );
     }
     
     onClickRegisterUser(){
         this.error = ""
         this.fireService.register( this.userData, () => {
                 alert("Registration success! ");
+                this.router.navigate( ['/forum-home'] );
         }, error => {
                 console.log("Error", error);
                 this.error = error.message;
@@ -50,73 +53,18 @@ export class RegisterPage {
     }
 
     onClickGetUser(){
-        this.fireService.get( "fhae5kC5f8f0sSp0bCaYh4OctKF2", "users", data => {
-            alert( "Fetch data: " + data );
-        }, error => console.log( "Error fetching data" ))
+        console.log('fhae5kC5f8f0sSp0bCaYh4OctKF2 ' + this.key)
+        this.fireService.get( this.key , "users", snapshot => {
+            alert( "Snapshot: " + JSON.stringify(snapshot) )
+        }, error => console.log( "Error ", error ) )
     }
 
-    // onClickRegisterUser(){
-    //     this.auth.createUserWithEmailAndPassword( this.userData.email, this.userData.password )
-    //         .then( authData =>{
-    //             console.log('success register' + JSON.stringify(authData) );
-
-    //             this.key = authData["uid"];
-    //             console.log( "Auth Data UID ", authData["uid"] )
-
-    //             // this.ref.c
-
-    //             this.getUserData( userData => {
-    //                     this.data = {
-    //                     name: this.userData.name,
-    //                     email: this.userData.email,
-    //                     uid: this.key
-    //                 }
-
-    //                 console.log("Data to be stored on cache  ", this.data)
-    //                 localStorage.setItem( 'login_data', JSON.stringify( this.data ) );
-    //                 this.loginData = JSON.parse( localStorage.getItem( 'login_data' ) );                       
-    //                 this.router.navigate( ['/forum-home'] ); 
-    //             }, error=> alert( "Unable to get user data" + error) );
-
-    //          })
-    //         .catch( err => alert( "Account is not registered." + err ) );
-    // }
-
-    // getUserData( successCallback, failureCallback ){
-    //     if ( !this.key ) this.key = this.loginData.uid;
-        
-    //     console.log("This user's UID: ", this.key );
-    //     this.ref
-    //         .child( this.key )
-    //         .once('value').then( snapshot => {
-    //             this.userData = snapshot.val(); 
-    //             successCallback( this.userData )
-    //             console.log( "User Data", this.userData );
-    //         }, err => failureCallback( err ) );
-    // }
-
     onClickUpdateUser(){
-        // let key =  this.loginData.uid;
-        // console.log( "This user's key to update: " , key );
-        // this.ref.child( key )
-        //     .update( this.userData )
-        //     .then ( re => {
-        //             alert( "Account successfully updated" );
-
-        //             this.getUserData( userData => {
-        //                          this.data = {
-        //                             name: this.userData.name,
-        //                             email: this.userData.email,
-        //                             uid: this.key
-        //                         }
-
-        //                         console.log("Data to be stored on cache  ", this.data)
-        //                         localStorage.setItem( 'login_data', JSON.stringify( this.data ) );
-        //                         this.loginData = JSON.parse( localStorage.getItem( 'login_data' ) );   
-
-        //                         this.router.navigate( ['/forum-home'] ); 
-        //                     }, error=> alert( "Unable to get user data" + error) );
-        //          }, err => console.log("Error Update. ", err) );
+        this.fireService.update( this.userData, this.key, "users", () => {
+            this.fireService.updateUserEmail( this.userData.email, () => {
+                alert( "Update success!" );
+            }, error => console.log( "Unable to update email: ", error ) );
+        }, error => console.log( "Unable to update user: ", error ) );
     }
 
 }   

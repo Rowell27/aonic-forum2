@@ -1,7 +1,7 @@
 <base-nav></base-nav>
 
-<h3 *ngIf="!loginData">Register an account</h3>
-<h3 *ngIf="loginData">Update Profile</h3>
+<h3 *ngIf="!key">Register an account</h3>
+<h3 *ngIf="key">Update Profile</h3>
 
 <div class="container">
       <form>
@@ -22,18 +22,21 @@
 
         <div class="form-group">
             <label>Email</label>
-            <input *ngIf=" !loginData " type="text" class="form-control" name="email" [(ngModel)]="userData.email">
-            <input *ngIf=" loginData " disabled type="text" class="form-control" name="email" [(ngModel)]="userData.email">
+            <input type="text" class="form-control" name="email" [(ngModel)]="userData.email">
         </div>
         
-        <div *ngIf=" !loginData " class="form-group">
+        <div *ngIf=" !key " class="form-group">
             <label>Password</label>
             <input type="password" class="form-control" name="password" [(ngModel)]="userData.password">        
         </div>
     </form>
    
-    <span *ngIf="error" class="alert-danger">Error: {{ error }}</span><br>
-    <button class="btn btn-primary" *ngIf="!loginData" (click)="onClickRegisterUser()">Register</button>
-    <button class="btn btn-primary" *ngIf="!loginData" (click)="onClickGetUser()">Get Registered Data</button>
-    <button class="btn btn-info" *ngIf="loginData" (click)="onClickUpdateUser()">Update Account</button>   
+    <span *ngIf="error" class="alert-danger">Error: {{ error }}</span><br>  
+    <button class="btn btn-primary" *ngIf="!key" (click)="onClickRegisterUser()">
+        <i class="fa fa-user-plus fa-lg"></i> Register
+    </button>
+    <button class="btn btn-primary" (click)="onClickGetUser()">Get Registered Data</button>
+    <button class="btn btn-info" *ngIf="key" (click)="onClickUpdateUser()">
+        <i class="fa fa-user fa-lg"></i> Update Account
+    </button>   
 </div>
