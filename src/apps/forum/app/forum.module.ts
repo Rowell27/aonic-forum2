@@ -7,10 +7,8 @@ import { BaseModule } from '../pages/base/base.module';
 import { LoginPage } from '../pages/auth/login/login';
 import { RegisterPage } from '../pages/auth/register/register';
 import { ForumHomePage } from '../pages/dashboard/forum-home/forum-home';
-import { ForumCategoryPage } from '../pages/dashboard/forum-category/forum-category';
-import { ForumEditCategoryPage } from '../pages/dashboard/forum-category/forum-edit-category/forum-edit-category';
 import { ForumPostPage } from '../pages/dashboard/forum-post/forum-post';
-import { ForumEditPostPage } from '../pages/dashboard/forum-post/forum-edit-post/forum-edit-post';
+import { ForumCommentPage } from '../pages/dashboard/forum-comment/forum-comment';
 import { FireBaseService } from './firebase-service';
 
 const appRoutes: Routes = [
@@ -18,13 +16,6 @@ const appRoutes: Routes = [
     { path: 'login', component: LoginPage },
     { path: 'register', component: RegisterPage },
     { path: 'forum-home', component: ForumHomePage },
-    { path: 'forum-category/:id', component: ForumCategoryPage },    
-    { path: 'forum-edit-category', component: ForumEditCategoryPage },     
-    { path: 'forum-edit-category/:id', component: ForumEditCategoryPage },
-    { path: 'forum-post', component: ForumPostPage },                          
-    { path: 'forum-edit-post', component: ForumEditPostPage },  
-    { path: 'forum-edit-post/:id', component: ForumEditPostPage }                          
-                            
 ]
 
 @NgModule({
@@ -32,10 +23,8 @@ const appRoutes: Routes = [
         LoginPage,
         RegisterPage,
         ForumHomePage,
-        ForumCategoryPage,
-        ForumEditCategoryPage,
         ForumPostPage,
-        ForumEditPostPage
+        ForumCommentPage
     ],
     imports: [
         BrowserModule,

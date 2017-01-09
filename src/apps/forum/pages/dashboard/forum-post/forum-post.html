@@ -1,20 +1,32 @@
-<base-nav></base-nav>
-<div class="container">
-    <form>
-        <div class="form-group">
-            <label for="comment">Create Post:</label>
-            <textarea class="form-control" rows="3" id="comment"></textarea>
-        </div>
-    </form>   
-
-    <button class="btn btn-primary" (click)="onClickSubmitPost()">Post</button>
+<div class="form-group">
+    <textarea class="form-control form-control-sm" [(ngModel)]="post.content" type="text" name="content"></textarea>
+    <button class="btn btn-primary btn-sm btn-pos-right" (click)="onClickSubmitPost()">
+        <i class="fa fa-paper-plane fa-lg"></i> Post
+    </button>            
 </div>
 
-<br /> <hr /> <br />
-
-<div class="card">
-  <!--<img class="card-img-top" src="..." alt="Card image cap">-->
-  <div class="card-block">
-    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-  </div>
+<div class="container-fluid card-block">
+    <ul class="list-group list-group-flush" *ngFor="let post of list_posts, let id = index">
+        <li class="card list-group-item">
+            <div class="card">
+                <div class="card-block">
+                    <h4 class="card-title">{{ post.author }}</h4>
+                    <h6 class="card-subtitle mb-2 text-muted">Date Posted: <i>{{ post.created }}</i></h6>
+                    <p class="card-text">{{ post.content }}</p>
+                    <!--<textarea class="form-control form-control-sm" [(ngModel)]="post.content" type="text" name="content"></textarea>-->
+                    
+                    <!--<a (click)="onClickViewComments(id)" class="card-link"> 
+                        <i class="fa fa-caret-down fa-lg"></i> View Comments
+                    </a>-->
+                    <a (click)="onClickEditPost(id)" class="card-link"> 
+                        <i class="fa fa-pencil fa-lg"></i> Edit Post
+                    </a>
+                    <a (click)="onClickDeletePost(id)" class="card-link"> 
+                        <i class="fa fa-times fa-lg"></i> Delete Post
+                    </a>
+                    <forum-comment-page></forum-comment-page>
+                </div>
+            </div>
+        </li>
+    </ul>
 </div>

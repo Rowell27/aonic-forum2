@@ -7,23 +7,24 @@ import { POST_DATA } from '../../../app/firebase-interface';
 
 
 @Component({
-    selector: 'forum-home-page',
-    templateUrl: 'forum-home.html'
+    selector: 'forum-comment-page',
+    templateUrl: 'forum-comment.html'
 })
 
-export class ForumHomePage implements OnInit {       
+export class ForumCommentPage implements OnInit {       
     
     key;
     user = <USER_DATA> {}
+    comments = <POST_DATA> {};
+    list_comments = [];
+    comments_keys = [];
 
     constructor( private router: Router, 
                  private fireService : FireBaseService,
                  private ngZone: NgZone ) {
-        this.checkLoggedIn();
     }
     
     ngOnInit(){
-        this.getUser();
     }
 
     renderPage() {
@@ -32,15 +33,4 @@ export class ForumHomePage implements OnInit {
         });
     }
 
-    checkLoggedIn(){
-        this.fireService.isLoggedIn( re => {
-            this.key = re;
-        }, error => console.log( "Error: ", error ) );
-    }
-
-    getUser(){
-        this.fireService.get( this.key, "users", re => {
-            this.user = re;
-        }, error => console.log( "Unable to get user info. Error: ", error ) );
-    }
 }

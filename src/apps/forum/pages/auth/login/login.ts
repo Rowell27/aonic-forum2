@@ -13,8 +13,7 @@ import { USER_DATA } from '../../../app/firebase-interface';
 
 export class LoginPage {
 
-    userData = <USER_DATA> {};
-    auth;
+    user = <USER_DATA> {};
     key: string;
     data = {};
     error = "";
@@ -33,6 +32,18 @@ export class LoginPage {
         });
     }
 
+    valdiateInput(){
+        if ( this.user.email == null || this.user.name == "" ) {
+            alert( "No user email provided" );
+            return false;
+        }
+        if ( this.user.password == null || this.user.name == "" ) {
+            alert( "No user password provided" );
+            return false;
+        }
+        return true;
+    }
+
     checkLoggedIn(){
         this.fireService.isLoggedIn( re => {
             this.key = re;
@@ -41,14 +52,15 @@ export class LoginPage {
     }
 
     onClickLoginUser(){
-             this.error = "";
-             this.fireService.login( this.userData, () =>{
-                    this.router.navigate( ['/forum-home'] ); 
-             }, error => {
-                 console.log("Error", error);
-                 this.error = error.message;
-                 this.renderPage();
-            });
+        if ( this.valdiateInput() == false ) return;
+        this.error = "";
+        this.fireService.login( this.user, () =>{
+            this.router.navigate( ['/forum-home'] ); 
+        }, error => {
+            console.log("Error", error);
+            this.error = error.message;
+            this.renderPage();
+        });
     }
 
 }

@@ -1,0 +1,23 @@
+<span>
+    <textarea class="form-control form-control-sm" type="text" name="content" ></textarea>
+        <button class="btn btn-success btn-sm" (click)="onClickAddComment(id)">
+        <i class="fa fa-paper-plane fa-lg"></i> Post Comment
+    </button>
+</span>
+
+<ul class="list-group list-group-flush" *ngFor="let post of list_posts, let id = index">
+    <li class="card list-group-item">
+        <h4 class="card-title">{{ post.author }}</h4>
+        <h6 class="card-subtitle mb-2 text-muted">Date Posted: <i>{{ post.created }}</i></h6>
+        <p class="card-text">{{ post.content }}</p>
+        <!--<a (click)="onClickViewComments(id)" class="card-link"> 
+            <i class="fa fa-caret-down fa-lg"></i> View Comments
+        </a>-->
+        <a (click)="onClickEditPost(id)" class="card-link"> 
+            <i class="fa fa-pencil fa-lg"></i> Edit Post
+        </a>
+        <a (click)="onClickDeletePost(id)" class="card-link"> 
+            <i class="fa fa-times fa-lg"></i> Delete Post
+        </a>
+    </li>
+</ul>

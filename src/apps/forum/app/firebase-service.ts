@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { auth, database } from 'firebase';
+import { auth, database, storage } from 'firebase';
 import * as firebase from 'firebase';
 import { USER_DATA, USER_LOGIN_DATA } from './firebase-interface';
 
@@ -19,8 +19,8 @@ export class FireBaseService {
             messagingSenderId: "329419405941"
         };
         firebase.initializeApp(firebaseConfig);
-        this._auth = auth;
-        this._database = database;
+        // this._auth = auth;
+        // this._database = database;
     }
 
     /***********************************************************
@@ -28,18 +28,16 @@ export class FireBaseService {
      *    This method checks if user is logged in using the SESSION_ID saved in LocalStorage.
      * 
      * @Flow of isLoggedIn() method:
-     * -- First, it checks in LocalStorage if there is existing SESSION_ID of the user that is currently logged in. 
      * -- If it has SESSION_ID, it returns the value as a successCallback,
      * -- Else, it returns an alert message using the failureCallback.
      * 
      * @example How To Use: 
      * 
      * isLoggedIn( key => {
-     *      console.log( "User is already logged in! Retrieved SESSION_ID: ", key );
+     *      //User is logged in! SESSION_ID exist in LocalStorage!
      * }, error => {
-     *      console.log( error );
+     *      //An error happened.
      * });
-     * 
      *
      * ************************************************************/
 
@@ -53,17 +51,16 @@ export class FireBaseService {
      *    This method logs in user with the provided information
      * 
      * @Flow of login() method:
-     * -- User provide login information and then passed to "user"
-     * -- If "success", it returns data from firebase, which is passed to "authData"
-     * -- Then, the variable "key" gets the UID from "authData", which is then saved to LocalStorage and will act as SESSION_ID
-     * -- If "failure", it returns an error
+     * -- If "success", it returns data from firebase, which is passed to parameter. UID will be
+     * -- Then, user's uID will be saved to LocalStorage
+     * -- If "failure", failureCallback is called with error.
      * 
      * @example How To Use: 
      * 
      * login( user, () => {
-     *      console.log( "Logged in success!" );
+     *      //Login success!
      * },error=>{
-     *      console.log( error );
+     *      //An error happened.
      * });
      * 
      * *************************************************************/
@@ -84,27 +81,24 @@ export class FireBaseService {
      *      This method registers the user with the provided information
      * 
      * @Flow of register() method:
-     * -- User provides information and then passed to "user" property
-     * -- If "success" from creating account using "auth()" method, it returns data and is passed to "authData", else error 
-     * -- Then it gets UID of authData then passes it to "key" variable
-     * -- Then, it deletes the user's password first before it pushes the data to Firebase database
-     * -- If "success" in pushing user's info, successCallback returns null
-     * -- Then, it sets the user's UID to the LocalStorage, which will act as a SESSION_ID to be used in isLoggedIn() module
+     * -- If "success", data is pushed to Firebase database and account information in Firebase authentication
+     * -- Then, user's uID will be saved to LocalStorage
+     * -- If "failure", failureCallback is called with an error.
      *
      * @example How To Use:
      * 
      * let USER_DATA = {
      *      name: 'User'
      *      email: 'user@email.com',
-     *      password: '123456',
+     *      password: 'xxxxxx',
      *      mobile: '0922832482',
      *      address: '00 User, Address',
      * }
      * 
      * register ( USER_DATA, () => {
-     *      console.log( "Registration success!" );
+     *      //Registration success!
      * }, error => {
-     *      console.log( "Unable to register account. Error: ", error );
+     *      //An error happened.
      * });
      * 
      * ***********************************************************/
@@ -115,7 +109,7 @@ export class FireBaseService {
                   console.log( "Success create account: ", authData )
                   this.key = authData['uid']
                   delete user.password;
-                  this.create( user, this.key, "users", () => {
+                  this.createUser( user, this.key, "users", () => {
                         successCallback();
                         localStorage.setItem( 'SESSION_ID', this.key );
                   }, failureCallback )
@@ -124,22 +118,43 @@ export class FireBaseService {
     }
 
     /*************************************************************
-     * @Guide in using create() method:
-     *      This method is used to push data from Firebase database, using the user's provided information
+     * @Guide in using createUser() method:
+     *      This method is used to push user data from Firebase database.
      * 
-     * @Flow of create() method:
-     * -- User provides information and then passed to "data". The "key" gets it value depends on the method used ( Example: The user's uID )
-     * -- The "refName" value will depend on the path specified by the method used. ( Example: "users" )
-     * -- Then, "ref" will get the Firebase reference, along with the "refName" value.
-     * -- Then, using the "key" specified ( Example: user's uID), the "data" will be pushed using the set() method of Firebase
-     * -- If "success" in pushing data, successCallback() is then called
+     * @Flow of createUser() method:
+     * -- If "success" in pushing data using the supplied parameters, successCallback() is then called.
      * -- Else, failureCallback() will be called, provided with the error details.
      * 
      * @example How To Use:
      * 
-     * -- For instance, we create a category:
+     * -- Refer to create() method. (Both method are the same but this method uses UID as the "key" value)
      * 
-     * let refName = "category";
+     * *************************************************************/
+
+    createUser( data, key , refName: string, successCallback: () => void , failureCallback: ( error ) => void ) {
+         let ref = database().ref( refName );
+         ref.child( key )
+            .set( data )
+            .then( () => {
+                console.info("Successfully pushed user data ", data );
+                successCallback();
+            })
+            .catch( error =>  failureCallback( error ) ); 
+    }
+
+    /*************************************************************
+     * @Guide in using createUser() method:
+     *      This method is used to push user data from Firebase database.
+     * 
+     * @Flow of createUser() method:
+     * -- If "success" in pushing data using the supplied parameters, successCallback() is then called.
+     * -- Else, failureCallback() will be called, provided with the error details.
+     * 
+     * @example How To Use:
+     * 
+     * -- For instance, we create a post:
+     * 
+     * let refName = "post";
      * let DATA = {
      *      id: 'id',
      *      name: 'name',
@@ -148,24 +163,22 @@ export class FireBaseService {
      * }
      * let key = DATA.id;
      * 
-     * 
-     * create( DATA, key, refName, () => {
-     *      console.log( "Category created" );
+     * createUser( DATA, refName, () => {
+     *      //Data pushed success!
      * }, error => {
-     *      console.log( "Unable to create category. Error: ", error );
+     *      //An error happened.
      * });
      * 
      * *************************************************************/
 
-    create( data, key , refName: string, successCallback: () => void , failureCallback: ( error ) => void ) {
-         let ref = database().ref( refName );
-         ref.child( key )
-            .set( data )
-            .then( () => {
-                console.info("Successfully pushed data", data );
-                successCallback();
-            })
-            .catch( error =>  failureCallback( error ) ); 
+    create( data, refName: string, successCallback: () => void, failureCallback: ( error ) => void ) {
+        let ref = database().ref( refName );
+        ref.push( data )
+           .then( () => {
+               console.info( "Successfully pushed data ", data );
+               successCallback();
+           } )
+           .catch( error =>  failureCallback( error ) ); 
     }
 
      /*************************************************************
@@ -173,11 +186,7 @@ export class FireBaseService {
      *    This method logs in user with the provided information
      * 
      * @Flow of update() method:
-     * -- Data (that are retrieved using get() method) will be transfer to "data" variable.  
-     * -- The "refName" value will depend on the path specified by the method used. ( Example: "users" )
-     * -- Then, "ref" will get the Firebase reference, along with the "refName" value.
-     * -- Then, using the "key" specified ( Example: user's uID), the "data" updates the old data using the update() method of Firebase
-     * -- If "success", successCallback() is called.
+     * -- If "success", data is then updated and successCallback() is called.
      * -- If "failure", failureCallback is called, which returns an error.
      * 
      * @example How To Use: 
@@ -193,11 +202,10 @@ export class FireBaseService {
      * }
      * let key = DATA.id;
      * 
-     * 
      * update( DATA, key, refName, () => {
-     *      console.log( "Category created" );
+     *      //Update success!
      * }, error => {
-     *      console.log( "Unable to create category. Error: ", error );
+     *      //An error happened
      * });
      * 
      * *************************************************************/
@@ -218,13 +226,7 @@ export class FireBaseService {
      *    This method fetch data of as "single item" from the Firebase' database, by using the key item.    
      * 
      * @Flow of get() method:
-     * -- The "key" gets it value depends on the method used ( Example: The user's uID )
-     * -- The "refName" value will depend on the path specified by the method used. 
-     *      ( Example: If method is createUser(), then the refName value will be "users" )
-     * -- Then, "ref" will get the Firebase reference, along with the "refName" value.
-     * -- Using the "key" specified, the data will then be fetched in the Firebase database, using the .once() method
-     * -- If "success", retrieved data is then passed into the "data" variable.
-     * -- Upon "success", successCallback() will be called, with "data" as returned value. 
+     * -- If "success", retrieved data will be returned as successCallback.
      * -- Else, failureCallback() will be called, provided with the error details.
      * 
      * @example How To Use: 
@@ -242,9 +244,9 @@ export class FireBaseService {
      * 
      * get( key, refName, data => {
      *      DATA = data;
-     *      console.log( "Success! Data retrieved: ", DATA );
+     *      //Data of an item retrieved!
      * },error => {
-     *      console.log( error );
+     *      //An error happened
      * });
      * 
      * *************************************************************/
@@ -259,11 +261,27 @@ export class FireBaseService {
             .catch( error => failureCallback( error ) );
     }
 
-
+    /****************************************************************
+     * @Guide in using list() method:
+     *      This method deletes the data in database.
+     * 
+     * @Flow of list() method:
+     * -- If "success", successCallback is called with "data" as returned value.
+     * -- If "failure", failureCallback is called with error details. 
+     * 
+     * @example How to Use:
+     * 
+     * list( "post", data => {
+     *     //List of data retrieved.
+     * }, error => {
+     *     //An error happened 
+     * });
+     * 
+     ************************************************************************/
 
     list( refName: string, successCallback: ( data ) => void, failureCallback: ( error ) => void ){
          let ref = database().ref( refName );
-         ref.once( "value")
+         ref.once( "value" )
             .then( snapshot => {
                 if( snapshot.exists() ) successCallback( snapshot.val() )
                 else failureCallback( 'No retrieved value.' )
@@ -271,12 +289,35 @@ export class FireBaseService {
             .catch( error => failureCallback( error ) ) 
     }
 
+    // upload(){
+    //     let ref = storage()
+    // }
 
+    /****************************************************************
+     * @Guide in using delete() method:
+     *      This method deletes the data in database.
+     * 
+     * @Flow of logout() method:
+     * -- If "success", data of the specified "key" will be deleted.
+     * -- If "failure", failureCallback is called with error details. 
+     * 
+     * @example How to Use:
+     * 
+     * let key = "category001";
+     * 
+     * delete( key, "category", () => {
+     *     //Data deleted
+     * }, error => {
+     *     //An error happened 
+     * });
+     * 
+     ************************************************************************/
     
     delete( key, refName: string, successCallback: () => void, failureCallback: ( error ) => void ){
         let ref = database().ref( refName );
         ref.child( key )
             .remove()
+            .then( () => successCallback() )
             .catch( error => failureCallback( error ) );
     }
 
@@ -287,15 +328,25 @@ export class FireBaseService {
      * @Flow of logout() method:
      * -- If "success", users is logged out, value of LocalStorage and "key" is cleared.
      * 
+     * @example How to Use:
+     * 
+     * logout(){
+     *      //User logged out!
+     * }
+     * 
      ************************************************************************/
 
-    logout(){
+    logout( callback? ){
         auth().signOut();
         localStorage.removeItem( "SESSION_ID" );
         this.key = null;
+        callback();
     }
 
-    deleteUser( key , refName: string, successCallback: () => void, failureCallback: ( error ) => void ) {
+    //This method is currently not in used, since it needs the user to be re-authenticated 
+    //before it deletes its data from Firebase authentication
+
+    resign( key , refName: string, successCallback: () => void, failureCallback: ( error ) => void ) {
         let currentUser = auth().currentUser;
         currentUser.delete()
             .then( () => {
@@ -313,8 +364,16 @@ export class FireBaseService {
      * @Guide in using resetUserPassword() method:
      *      This method resets user's password by sending reset configuration to the user's provided email.
      * 
-     * -- If "sucess", Firebase will send password-reset configuration to email. Then, successCallback is called.
-     * -- If "failure", failureCallback is called
+     * -- If "sucess", Firebase will send password-reset configuration to email, and successCallback is called.
+     * -- If "failure", failureCallback is called.
+     * 
+     * @example How To Use:
+     * 
+     * resetUserPassword( () => {
+     *      //Reset configuration sent to email.
+     * }, error => {
+     *      /An error happened.
+     * } )
      * 
      ************************************************************************/
     
