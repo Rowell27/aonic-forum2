@@ -343,7 +343,7 @@ export class FireBaseService {
         callback();
     }
 
-    //This method is currently not in used, since it needs the user to be re-authenticated 
+    //This method may provide error, since it needs the user to be re-authenticated 
     //before it deletes its data from Firebase authentication
 
     resign( key , refName: string, successCallback: () => void, failureCallback: ( error ) => void ) {

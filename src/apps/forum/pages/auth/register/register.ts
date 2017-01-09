@@ -1,8 +1,7 @@
 import { Component, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
-import { database, auth } from 'firebase';
 import { FireBaseService } from '../../../app/firebase-service';
-import { USER_DATA, USER_LOGIN_DATA } from '../../../app/firebase-interface';
+import { USER_DATA } from '../../../app/firebase-interface';
 
 
 @Component ({
@@ -15,8 +14,6 @@ export class RegisterPage {
     user = <USER_DATA> {}
     key;
     error;
-    ref;
-    data = {};
     
     constructor( private router: Router, 
                  private fireService : FireBaseService,
