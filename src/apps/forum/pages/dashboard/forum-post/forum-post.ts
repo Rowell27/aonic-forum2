@@ -39,6 +39,12 @@ export class ForumPostPage implements OnInit {
         });
     }
 
+    getUser(){
+        this.fireService.get( this.key, "users", re => {
+            this.renderPage( re );
+        }, error => console.log( "Unable to get user info. ", error ) );
+    }
+
     getCommentsLists(){
         this.list_comments = [];
         let path = "comments/" + this.post.key
@@ -96,7 +102,7 @@ export class ForumPostPage implements OnInit {
         let time = new Date().getTime();
         let date = new Date(time);
         let data = {
-            author: this.post.data.author,
+            author: this.user.name,
             content: this.comment.content,
             created: date.toDateString()
         }

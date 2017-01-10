@@ -34,6 +34,7 @@
             </span>
             <ul class="list-group list-group-flush" *ngFor="let comment of list_comments, let id = index">
             <forum-comment-page
+                [user] = "user"
                 [post] = "post"
                 [comment] = "comment"
                 (delete) = "onClickDeleteComment( comment, id )"
