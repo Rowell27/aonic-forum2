@@ -68,7 +68,7 @@ export class RegisterPage {
                 alert("Registration success! ");
                 this.router.navigate( ['/forum-home'] );
         }, error => {
-                console.log("Error", error);
+                console.log("Alert! ", error);
                 this.error = error.message;
                 this.renderPage();
         } );

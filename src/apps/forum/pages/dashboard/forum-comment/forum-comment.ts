@@ -1,9 +1,8 @@
-import { Component, OnInit, NgZone } from '@angular/core';
+import { Component, OnInit, Input, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { FireBaseService } from '../../../app/firebase-service';
 
-import { USER_DATA } from '../../../app/firebase-interface';
-import { POST_DATA } from '../../../app/firebase-interface';
+import { USER_DATA, POST_DATA, COMMENT_DATA } from '../../../app/firebase-interface';
 
 
 @Component({
@@ -14,10 +13,10 @@ import { POST_DATA } from '../../../app/firebase-interface';
 export class ForumCommentPage implements OnInit {       
     
     key;
-    user = <USER_DATA> {}
-    comments = <POST_DATA> {};
+    comments = <COMMENT_DATA> {};
     list_comments = [];
     comments_keys = [];
+    @Input() post: POST_DATA;
 
     constructor( private router: Router, 
                  private fireService : FireBaseService,
@@ -27,10 +26,25 @@ export class ForumCommentPage implements OnInit {
     ngOnInit(){
     }
 
-    renderPage() {
+    renderPage( re ) {
         this.ngZone.run(() => {
-            console.log('ngZone.run()');
         });
+    }
+    
+
+    getCommentsList(){
+
+    }
+
+    onClickAddComment( post ){
+        let data = {
+            author: this.post.name,
+            content: this.comments.content,
+            created: Date.now()
+        }
+        this.fireService.create( data, "posts/comments", () => {
+            this.getCommentsList()
+        }, error => console.log( "Unable to create comment. ", error ) );
     }
 
 }

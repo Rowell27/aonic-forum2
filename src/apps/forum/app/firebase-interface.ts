@@ -27,7 +27,23 @@ export interface USER_DATA extends USER_LOGIN_DATA {
  ***/
 
 export interface POST_DATA extends USER_DATA{
-    ID: string;
     content: string;
     created: number;
+}
+
+export interface COMMENT_DATA extends POST_DATA{
+    content: string;
+}
+
+export interface FILE_UPLOAD {
+    file: any;
+    blob?: any;
+    ref?: string;
+    base64?: string;
+    name?: string;
+}
+
+export interface FILE_UPLOADED {
+    url: string;
+    ref: string;
 }

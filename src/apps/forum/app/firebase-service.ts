@@ -1,7 +1,12 @@
 import { Injectable } from '@angular/core';
 import { auth, database, storage } from 'firebase';
 import * as firebase from 'firebase';
-import { USER_DATA, USER_LOGIN_DATA } from './firebase-interface';
+import { USER_DATA, USER_LOGIN_DATA, FILE_UPLOAD, FILE_UPLOADED } from './firebase-interface';
+
+export interface RETURN_DATA {
+    key : string,
+    data : any;
+}
 
 @Injectable()
 export class FireBaseService {
@@ -9,6 +14,7 @@ export class FireBaseService {
     key;
     _auth;
     _database;
+    returnedValues = <RETURN_DATA> {}
 
     constructor() { 
         let firebaseConfig = {
@@ -171,12 +177,15 @@ export class FireBaseService {
      * 
      * *************************************************************/
 
-    create( data, refName: string, successCallback: () => void, failureCallback: ( error ) => void ) {
+    create( data, refName: string, successCallback: ( data ) => void, failureCallback: ( error ) => void ) {
         let ref = database().ref( refName );
-        ref.push( data )
+        this.returnedValues.key = ref.push().key;
+        this.returnedValues.data = data
+        ref.child( this.returnedValues.key )
+           .set( data )
            .then( () => {
                console.info( "Successfully pushed data ", data );
-               successCallback();
+               successCallback( this.returnedValues );
            } )
            .catch( error =>  failureCallback( error ) ); 
     }
@@ -289,8 +298,9 @@ export class FireBaseService {
             .catch( error => failureCallback( error ) ) 
     }
 
-    // upload(){
-    //     let ref = storage()
+    // upload( data: FILE_UPLOAD, successCallback: (uploaded:FILE_UPLOADED) => void, failureCallback: (error:string) => void, progressCallback?: ( percent: number ) => void ) {
+    //     let ref = storage().ref("images");
+    //     ref.child("profile_pics").put( data.file );
     // }
 
     /****************************************************************
@@ -340,7 +350,7 @@ export class FireBaseService {
         auth().signOut();
         localStorage.removeItem( "SESSION_ID" );
         this.key = null;
-        callback();
+        callback;
     }
 
     //This method may provide error, since it needs the user to be re-authenticated 

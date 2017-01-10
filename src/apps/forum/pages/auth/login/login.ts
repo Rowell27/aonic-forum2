@@ -33,11 +33,11 @@ export class LoginPage {
     }
 
     valdiateInput(){
-        if ( this.user.email == null || this.user.name == "" ) {
+        if ( this.user.email == null || this.user.email == "" ) {
             alert( "No user email provided" );
             return false;
         }
-        if ( this.user.password == null || this.user.name == "" ) {
+        if ( this.user.password == null || this.user.password == "" ) {
             alert( "No user password provided" );
             return false;
         }
@@ -57,7 +57,7 @@ export class LoginPage {
         this.fireService.login( this.user, () =>{
             this.router.navigate( ['/forum-home'] ); 
         }, error => {
-            console.log("Error", error);
+            console.log("Alert! ", error);
             this.error = error.message;
             this.renderPage();
         });
