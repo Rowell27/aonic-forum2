@@ -57,7 +57,7 @@ export class ForumHomePage implements OnInit {
 
     displayPosts( data? ){
         if ( data === void 0 ) return;
-        for( let id of Object.keys( data ) ){
+        for( let id of Object.keys( data ).reverse() ){
             this.list_posts.push( { key: id, data: data[id] } );
         }
     }

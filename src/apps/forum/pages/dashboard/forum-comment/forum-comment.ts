@@ -17,6 +17,7 @@ export class ForumCommentPage implements OnInit {
     list_comments = [];
     comments_keys = [];
     @Input() post: POST_DATA;
+    @Input() comment;
 
     constructor( private router: Router, 
                  private fireService : FireBaseService,
@@ -33,18 +34,9 @@ export class ForumCommentPage implements OnInit {
     
 
     getCommentsList(){
-
+        
     }
 
-    onClickAddComment( post ){
-        let data = {
-            author: this.post.name,
-            content: this.comments.content,
-            created: Date.now()
-        }
-        this.fireService.create( data, "posts/comments", () => {
-            this.getCommentsList()
-        }, error => console.log( "Unable to create comment. ", error ) );
-    }
+    
 
 }

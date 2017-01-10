@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter, NgZone } from '@angular
 import { Router } from '@angular/router';
 import { FireBaseService } from '../../../app/firebase-service';
 
-import { USER_DATA,POST_DATA } from '../../../app/firebase-interface';
+import { USER_DATA, POST_DATA, COMMENT_DATA } from '../../../app/firebase-interface';
 
 
 @Component({
@@ -20,6 +20,8 @@ export class ForumPostPage implements OnInit {
     key;
     toggle: boolean = false;
     temp;
+    comment = <COMMENT_DATA> {}
+    list_comments = []
 
     constructor( private router: Router, 
                  private fireService : FireBaseService,
@@ -27,13 +29,29 @@ export class ForumPostPage implements OnInit {
     }
     
     ngOnInit(){
-        // this.getPostLists();
+        this.getCommentsLists();
     }
 
     renderPage( re ) {
         this.ngZone.run(() => {
             this.user = re;
         });
+    }
+
+    getCommentsLists(){
+        this.list_comments = [];
+        let path = "posts/" + this.post.key + "/comments/"
+        this.fireService.list( path , data => {
+            this.displayComments( data );
+            // console.log( "Post lists: ", JSON.stringify(this.list_posts))
+        }, error => console.log( "Unable to get all data. ", error ) )
+    }
+
+    displayComments( data? ){
+        if ( data === void 0 ) return;
+        for( let id of Object.keys( data ).reverse( ) ){
+            this.list_comments.push( { key: id, data: data[id] } );
+        }
     }
 
     onClickToggleEdit( post ){
@@ -55,6 +73,17 @@ export class ForumPostPage implements OnInit {
         this.delete.emit();
     }
 
-    
+    onClickSubmitComment( post ){
+        let refName = "posts/" + post.key + "/comments"
+        let data = {
+            author: this.post.data.author,
+            content: this.comment.content,
+            created: Date.now()
+        }
+        this.fireService.create( data, refName, re => {
+            console.log( "Success comment!" )
+            this.list_comments.unshift( re )
+        }, error => console.log( "Unable to create comment. ", error ) );
+    }
     
 } 

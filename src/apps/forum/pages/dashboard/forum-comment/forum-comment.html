@@ -1,9 +1,9 @@
 
 
-<ul class="list-group list-group-flush" *ngFor="let post of list_posts, let id = index">
+<ul class="list-group list-group-flush" *ngFor="let comment of list_comments, let id = index">
     <li class="card list-group-item">
         <b class="card-title">{{ comment.author }}</b>
-        <p class="card-subtitle mb-2 text-muted">Date Posted: <i>{{ post.created }}</i></p>
+        <p class="card-subtitle mb-2 text-muted">Date Posted: <i>{{ comment.created }}</i></p>
         <p class="card-text">{{ comment.content }}</p>
         
         <a (click)="onClickEditPost(id)" class="card-link"> 

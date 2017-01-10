@@ -23,13 +23,14 @@
             <i class="fa fa-times fa-lg"></i> Delete Post
         </a>
         <span *ngIf="!toggle">
-            <textarea class="form-control form-control-sm" type="text" name="content" rows="1" ></textarea>
-            <button class="btn btn-success btn-sm" (click)="onClickAddComment( post )">
+            <textarea class="form-control form-control-sm" type="text" name="content" rows="1" [(ngModel)]="comment.content" ></textarea>
+            <button class="btn btn-success btn-sm" (click)="onClickSubmitComment( post )">
                 <i class="fa fa-paper-plane fa-lg"></i> Post Comment
             </button>
         </span>
-        <forum-comment-page
+        <forum-comment-page *ngFor="let comment of list_comments, let id = index"
             [post] = "post"
+            [comment] = "comment"
         ></forum-comment-page>
     </div>
 </li>
