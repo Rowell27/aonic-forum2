@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter, NgZone } from '@angular
 import { Router } from '@angular/router';
 import { FireBaseService } from '../../../app/firebase-service';
 
-import { USER_DATA, POST_DATA, COMMENT_DATA } from '../../../app/firebase-interface';
+import { POST_DATA, COMMENT_DATA } from '../../../app/firebase-interface';
 
 
 @Component({

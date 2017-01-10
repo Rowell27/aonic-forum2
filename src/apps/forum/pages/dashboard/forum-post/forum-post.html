@@ -14,8 +14,8 @@
             </button>
         </span>
         <a (click)="onClickViewComments( )" *ngIf="!toggle" class="card-link" > 
-            <span *ngIf="!toggle_comments" ><i class="fa fa-pencil fa-lg"></i> View Comments</span> 
-            <span *ngIf="toggle_comments" ><i class="fa fa-pencil fa-lg"></i> Hide Comments</span> 
+            <span *ngIf="!toggle_comments" ><i class="fa fa-caret-down fa-lg"></i> View Comments</span> 
+            <span *ngIf="toggle_comments" ><i class="fa fa-caret-up fa-lg"></i> Hide Comments</span> 
         </a>
         <a (click)="onClickToggleEdit( post )" class="card-link" > 
             <span *ngIf="!toggle" ><i class="fa fa-pencil fa-lg"></i> Edit Post</span> 
