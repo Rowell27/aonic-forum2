@@ -162,15 +162,12 @@ export class FireBaseService {
      * 
      * let refName = "post";
      * let DATA = {
-     *      id: 'id',
      *      name: 'name',
-     *      title: 'title',
      *      description: 'description'
      * }
-     * let key = DATA.id;
      * 
-     * createUser( DATA, refName, () => {
-     *      //Data pushed success!
+     * createUser( DATA, refName, re => {
+     *      //Data pushed success! "re" value is returned.
      * }, error => {
      *      //An error happened.
      * });

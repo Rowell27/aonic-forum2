@@ -1,16 +1,23 @@
-
-
-<ul class="list-group list-group-flush" *ngFor="let comment of list_comments, let id = index">
-    <li class="card list-group-item">
-        <b class="card-title">{{ comment.author }}</b>
-        <p class="card-subtitle mb-2 text-muted">Date Posted: <i>{{ comment.created }}</i></p>
-        <p class="card-text">{{ comment.content }}</p>
-        
-        <a (click)="onClickEditPost(id)" class="card-link"> 
-            <i class="fa fa-pencil fa-lg"></i> Edit
+<li class="card list-group-item">
+    <span *ngIf="!toggle">
+        <b class="card-title">{{ comment.data.author }}</b>
+        <p class="card-subtitle mb-2 text-muted">Date Posted: <i>{{ comment.data.created }}</i></p>
+        <p class="card-text">{{ comment.data.content }}</p>
+    </span>
+    <br>
+    <span *ngIf="toggle">
+        <textarea class="form-control form-control-sm" type="text" name="content" [(ngModel)]="comment.data.content"></textarea>
+        <button class="btn btn-warning btn-sm" (click)="onClickUpdateComment( comment )">
+            <i class="fa fa-pencil fa-lg"></i> Update
+        </button>
+    </span>
+    <span *ngIf="!toggle">
+        <a (click)="onClickToggleEdit( comment )" class="card-link" > 
+            <span *ngIf="!toggle" ><i class="fa fa-pencil fa-lg"></i> Edit </span> 
+            <span *ngIf="toggle" ><i class="fa fa-times fa-lg"></i> Cancel</span> 
         </a>
-        <a (click)="onClickDeletePost(id)" class="card-link"> 
+        <a (click)="onClickDeleteComment( comment, id )" *ngIf="!toggle" class="card-link"> 
             <i class="fa fa-times fa-lg"></i> Delete
         </a>
-    </li>
-</ul>
+    </span>
+</li>

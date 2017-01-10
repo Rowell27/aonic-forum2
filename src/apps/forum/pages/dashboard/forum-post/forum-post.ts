@@ -19,6 +19,7 @@ export class ForumPostPage implements OnInit {
     @Output() update = new EventEmitter();    
     key;
     toggle: boolean = false;
+    toggle_comments: boolean = false;
     temp;
     comment = <COMMENT_DATA> {}
     list_comments = []
@@ -40,7 +41,7 @@ export class ForumPostPage implements OnInit {
 
     getCommentsLists(){
         this.list_comments = [];
-        let path = "posts/" + this.post.key + "/comments/"
+        let path = "comments/" + this.post.key
         this.fireService.list( path , data => {
             this.displayComments( data );
             // console.log( "Post lists: ", JSON.stringify(this.list_posts))
@@ -63,6 +64,13 @@ export class ForumPostPage implements OnInit {
         this.toggle = false;
     }
 
+    onClickViewComments( ){
+        if( this.toggle_comments == false ) {
+            return this.toggle_comments = true;
+        }
+        this.toggle_comments = false;
+    }
+
     onClickUpdatePost( post ){
         this.update.emit();
         this.toggle = false
@@ -73,17 +81,52 @@ export class ForumPostPage implements OnInit {
         this.delete.emit();
     }
 
+    validateInput(){
+        if ( this.comment.content == null || this.comment.content == '' ) 
+        {
+            alert( "Please provide message." );
+            return false;
+        }
+        return true;
+    }
+
     onClickSubmitComment( post ){
-        let refName = "posts/" + post.key + "/comments"
+        if ( this.validateInput() == false ) return;
+        let refName = "comments/" + post.key
+        let time = new Date().getTime();
+        let date = new Date(time);
         let data = {
             author: this.post.data.author,
             content: this.comment.content,
-            created: Date.now()
+            created: date.toDateString()
         }
         this.fireService.create( data, refName, re => {
             console.log( "Success comment!" )
+            this.comment.content = ''
             this.list_comments.unshift( re )
         }, error => console.log( "Unable to create comment. ", error ) );
     }
     
+    onClickUpdateComment( comment ){
+        let refName = "comments/" + comment.key
+        let time = new Date().getTime();
+        let date = new Date(time);
+        let data = {
+            author: comment.data.author,
+            updated: date.toDateString(),
+            content: comment.data.content 
+        }
+        console.log( "Data ", data )
+        this.fireService.update( data, comment.key, refName, () => {
+            console.log( "Post updated!" )
+        }, error => console.log( "Unable to update post" ) )
+    }
+
+    onClickDeleteComment( comment, id ){
+        let refName = "comments/" + comment.key
+        this.fireService.delete( comment.key, refName, () => {
+            console.log( "Delete post successful" )
+            this.list_comments.splice( id, 1 );
+        }, error => console.log( "Unable to delete post! Error: ", error ) );
+    }
 } 

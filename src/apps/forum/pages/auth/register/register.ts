@@ -21,9 +21,14 @@ export class RegisterPage {
         this.checkLoggedIn();
     }
     
+    renderData( data ) {
+        this.ngZone.run(() => {
+            this.user = data
+        });
+    }
+
     renderPage() {
         this.ngZone.run(() => {
-            console.log('ngZone.run()');
         });
     }
 
@@ -32,7 +37,7 @@ export class RegisterPage {
             console.log( "Session ID: " , re )
             this.key = re;
             this.fireService.get( this.key, "users", data => {
-                this.user = data;
+                this.renderData( data );
             }, error => console.log( "Unable to retrieved user data from server. Error: ", error ) );
         }, error => console.info( "Alert! ", error ) );
     }

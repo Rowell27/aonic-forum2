@@ -73,8 +73,8 @@ export class ForumHomePage implements OnInit {
 
     onClickSubmitPost(){
         if ( this.validateInput() == false ) return;
-        let time = new Date().getTime()
-        let date = new Date(time)
+        let time = new Date().getTime();
+        let date = new Date(time);
         let data = {
             content: this.post.content,
             created: date.toDateString(),
@@ -94,7 +94,6 @@ export class ForumHomePage implements OnInit {
             updated: date.toDateString(),
             content: post.data.content 
         }
-        console.log( "Data ", data )
         this.fireService.update( data, post.key, "posts", () => {
             console.log( "Post updated!" )
         }, error => console.log( "Unable to update post" ) )

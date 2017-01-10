@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, NgZone } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { FireBaseService } from '../../../app/firebase-service';
 
@@ -14,10 +14,12 @@ export class ForumCommentPage implements OnInit {
     
     key;
     comments = <COMMENT_DATA> {};
-    list_comments = [];
-    comments_keys = [];
+    toggle: boolean = false;
+    temp;
     @Input() post: POST_DATA;
     @Input() comment;
+    @Output() delete = new EventEmitter();
+    @Output() update = new EventEmitter();
 
     constructor( private router: Router, 
                  private fireService : FireBaseService,
@@ -31,12 +33,23 @@ export class ForumCommentPage implements OnInit {
         this.ngZone.run(() => {
         });
     }
-    
 
-    getCommentsList(){
-        
+    onClickToggleEdit( comment ){
+        if( this.toggle == false ) {
+            this.temp = comment.data.content
+            return this.toggle = true;
+        }
+        this.comment.data.content = this.temp;
+        this.toggle = false;
+    }    
+
+    onClickUpdateComment( comment ){
+        this.update.emit();
+        this.toggle = false
     }
 
-    
+    onClickDeleteComment( comment, id ){
+        this.delete.emit();
+    }
 
 }

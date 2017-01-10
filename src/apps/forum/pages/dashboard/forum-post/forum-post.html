@@ -6,15 +6,17 @@
             <h6 class="card-subtitle mb-2 text-muted">Date Posted: <i>{{ post.data.created }}</i></h6>
             <p class="card-text">{{ post.data.content }}</p>
         </span> 
-        <br>
+        <hr>
         <span *ngIf="toggle">
             <textarea class="form-control form-control-sm" type="text" name="content" [(ngModel)]="post.data.content"></textarea>
             <button class="btn btn-warning btn-sm" (click)="onClickUpdatePost( post )">
                 <i class="fa fa-pencil fa-lg"></i> Update
             </button>
-            <span *ngIf="!toggle" ><i class="fa fa-pencil fa-lg"></i> Edit Post</span> 
         </span>
-
+        <a (click)="onClickViewComments( )" *ngIf="!toggle" class="card-link" > 
+            <span *ngIf="!toggle_comments" ><i class="fa fa-pencil fa-lg"></i> View Comments</span> 
+            <span *ngIf="toggle_comments" ><i class="fa fa-pencil fa-lg"></i> Hide Comments</span> 
+        </a>
         <a (click)="onClickToggleEdit( post )" class="card-link" > 
             <span *ngIf="!toggle" ><i class="fa fa-pencil fa-lg"></i> Edit Post</span> 
             <span *ngIf="toggle" ><i class="fa fa-times fa-lg"></i> Cancel</span> 
@@ -22,15 +24,22 @@
         <a (click)="onClickDeletePost( post, id)" *ngIf="!toggle" class="card-link"> 
             <i class="fa fa-times fa-lg"></i> Delete Post
         </a>
-        <span *ngIf="!toggle">
-            <textarea class="form-control form-control-sm" type="text" name="content" rows="1" [(ngModel)]="comment.content" ></textarea>
-            <button class="btn btn-success btn-sm" (click)="onClickSubmitComment( post )">
-                <i class="fa fa-paper-plane fa-lg"></i> Post Comment
-            </button>
-        </span>
-        <forum-comment-page *ngFor="let comment of list_comments, let id = index"
-            [post] = "post"
-            [comment] = "comment"
-        ></forum-comment-page>
+        <hr>
+        <div class="container-fluid" *ngIf="toggle_comments">
+            <span *ngIf="!toggle">
+                <textarea class="form-control form-control-sm" type="text" name="content" rows="1" [(ngModel)]="comment.content" ></textarea>
+                <button class="btn btn-success btn-sm" (click)="onClickSubmitComment( post )">
+                    <i class="fa fa-paper-plane fa-lg"></i> Post Comment
+                </button>
+            </span>
+            <ul class="list-group list-group-flush" *ngFor="let comment of list_comments, let id = index">
+            <forum-comment-page
+                [post] = "post"
+                [comment] = "comment"
+                (delete) = "onClickDeleteComment( comment, id )"
+                (update) = "onClickUpdateComment( comment )"
+            ></forum-comment-page>
+        </ul>
+        </div>
     </div>
 </li>
