@@ -82,7 +82,8 @@ export class ForumHomePage implements OnInit {
         }
         this.fireService.create( data, "posts", re => {
             this.post.content = '';
-            this.list_posts.unshift( re )
+            let newpost = JSON.parse(JSON.stringify( re ))
+            this.list_posts.unshift( newpost )
         }, error => console.log( "Unable to create post. Error: ", error ) );
     }
 

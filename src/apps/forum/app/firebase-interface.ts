@@ -35,6 +35,11 @@ export interface COMMENT_DATA extends POST_DATA{
     content: string;
 }
 
+export interface RETURN_DATA {
+    key : string,
+    data : any;
+}
+
 export interface FILE_UPLOAD {
     file: any;
     blob?: any;

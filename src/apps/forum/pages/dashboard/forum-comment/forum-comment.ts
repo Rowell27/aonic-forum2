@@ -44,7 +44,7 @@ export class ForumCommentPage implements OnInit {
         this.toggle = false;
     }    
 
-    onClickUpdateComment( comment ){
+    onClickUpdateComment( post, comment ){
         this.update.emit();
         this.toggle = false
     }

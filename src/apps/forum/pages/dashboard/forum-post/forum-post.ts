@@ -108,13 +108,14 @@ export class ForumPostPage implements OnInit {
         }
         this.fireService.create( data, refName, re => {
             console.log( "Success comment!" )
-            this.comment.content = ''
-            this.list_comments.unshift( re )
+            this.comment.content = '';
+            let newcomment = JSON.parse(JSON.stringify( re ))
+            this.list_comments.unshift( newcomment );
         }, error => console.log( "Unable to create comment. ", error ) );
     }
     
-    onClickUpdateComment( comment ){
-        let refName = "comments/" + comment.key
+    onClickUpdateComment( post, comment ){
+        let refName = "comments/" + post.key
         let time = new Date().getTime();
         let date = new Date(time);
         let data = {
@@ -122,17 +123,16 @@ export class ForumPostPage implements OnInit {
             updated: date.toDateString(),
             content: comment.data.content 
         }
-        console.log( "Data ", data )
         this.fireService.update( data, comment.key, refName, () => {
-            console.log( "Post updated!" )
-        }, error => console.log( "Unable to update post" ) )
+            console.log( "Comment updated!" )
+        }, error => console.log( "Unable to update comment" ) )
     }
 
     onClickDeleteComment( comment, id ){
         let refName = "comments/" + comment.key
         this.fireService.delete( comment.key, refName, () => {
-            console.log( "Delete post successful" )
+            console.log( "Delete comment successful" )
             this.list_comments.splice( id, 1 );
-        }, error => console.log( "Unable to delete post! Error: ", error ) );
+        }, error => console.log( "Unable to delete comment! Error: ", error ) );
     }
 } 

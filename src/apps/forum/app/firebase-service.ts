@@ -1,12 +1,9 @@
 import { Injectable } from '@angular/core';
 import { auth, database, storage } from 'firebase';
 import * as firebase from 'firebase';
-import { USER_DATA, USER_LOGIN_DATA, FILE_UPLOAD, FILE_UPLOADED } from './firebase-interface';
+import { USER_DATA, USER_LOGIN_DATA, RETURN_DATA } from './firebase-interface';
 
-export interface RETURN_DATA {
-    key : string,
-    data : any;
-}
+
 
 @Injectable()
 export class FireBaseService {

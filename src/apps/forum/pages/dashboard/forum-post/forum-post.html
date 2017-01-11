@@ -3,7 +3,8 @@
     <div class="card-block">
         <span *ngIf="!toggle">
             <h4 class="card-title">{{ post.data.author }}</h4>
-            <h6 class="card-subtitle mb-2 text-muted">Date Posted: <i>{{ post.data.created }}</i></h6>
+            <h6 *ngIf="!post.data.updated" class="card-subtitle mb-2 text-muted">Date Posted: <i>{{ post.data.created }}</i></h6>
+            <h6 *ngIf="post.data.updated" class="card-subtitle mb-2 text-muted">Date Posted: <i>{{ post.data.updated }} (Edited) </i></h6>
             <p class="card-text">{{ post.data.content }}</p>
         </span> 
         <hr>
@@ -38,7 +39,7 @@
                 [post] = "post"
                 [comment] = "comment"
                 (delete) = "onClickDeleteComment( comment, id )"
-                (update) = "onClickUpdateComment( comment )"
+                (update) = "onClickUpdateComment( post, comment )"
             ></forum-comment-page>
         </ul>
         </div>

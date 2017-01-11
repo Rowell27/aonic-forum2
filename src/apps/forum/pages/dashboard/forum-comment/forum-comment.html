@@ -1,17 +1,18 @@
 <li class="card list-group-item">
     <span *ngIf="!toggle">
         <b class="card-title">{{ comment.data.author }}</b>
-        <p class="card-subtitle mb-2 text-muted">Date Posted: <i>{{ comment.data.created }}</i></p>
+        <p *ngIf="!comment.data.updated" class="card-subtitle mb-2 text-muted">Date Posted: <i>{{ comment.data.created }}</i></p>
+        <p *ngIf="comment.data.updated" class="card-subtitle mb-2 text-muted">Date Posted: <i>{{ comment.data.updated }} (Edited) </i></p>
         <p class="card-text">{{ comment.data.content }}</p>
     </span>
     <br>
     <span *ngIf="toggle">
         <textarea class="form-control form-control-sm" type="text" name="content" [(ngModel)]="comment.data.content"></textarea>
-        <button class="btn btn-warning btn-sm" (click)="onClickUpdateComment( comment )">
+        <button class="btn btn-warning btn-sm" (click)="onClickUpdateComment( post, comment )">
             <i class="fa fa-pencil fa-lg"></i> Update
         </button>
     </span>
-    <span *ngIf="!toggle">
+    <span>
         <a (click)="onClickToggleEdit( comment )" class="card-link" > 
             <span *ngIf="!toggle" ><i class="fa fa-pencil fa-lg"></i> Edit </span> 
             <span *ngIf="toggle" ><i class="fa fa-times fa-lg"></i> Cancel</span> 
