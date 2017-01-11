@@ -18,6 +18,7 @@ export class ForumPostPage implements OnInit {
     @Output() delete = new EventEmitter();    
     @Output() update = new EventEmitter();    
     key;
+    error:string = '';
     toggle: boolean = false;
     toggle_comments: boolean = false;
     temp;
@@ -51,7 +52,16 @@ export class ForumPostPage implements OnInit {
         this.fireService.list( path , data => {
             this.displayComments( data );
             // console.log( "Post lists: ", JSON.stringify(this.list_posts))
-        }, error => console.log( "Unable to get all data. ", error ) )
+        }, error => {
+            this.renderError();
+            console.log( "Error: ", error );
+        } )
+    }
+
+    renderError(){
+        this.ngZone.run(() =>{
+            this.error = 'This post has no comment(s)';
+        })
     }
 
     displayComments( data? ){
@@ -111,6 +121,7 @@ export class ForumPostPage implements OnInit {
             this.comment.content = '';
             let newcomment = JSON.parse(JSON.stringify( re ))
             this.list_comments.push( newcomment );
+            this.error = '';
         }, error => console.log( "Unable to create comment. ", error ) );
     }
     
@@ -128,11 +139,12 @@ export class ForumPostPage implements OnInit {
         }, error => console.log( "Unable to update comment" ) )
     }
 
-    onClickDeleteComment( comment, id ){
-        let refName = "comments/" + comment.key
+    onClickDeleteComment( post, comment, id ){
+        let refName = "comments/" + post.key
         this.fireService.delete( comment.key, refName, () => {
             console.log( "Delete comment successful" )
             this.list_comments.splice( id, 1 );
+            if( this.list_comments.length <= 0) this.error ='This post has no comment(s)'
         }, error => console.log( "Unable to delete comment! Error: ", error ) );
     }
 } 

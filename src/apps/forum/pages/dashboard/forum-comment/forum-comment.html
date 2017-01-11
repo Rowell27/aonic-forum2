@@ -17,7 +17,7 @@
             <span *ngIf="!toggle" ><i class="fa fa-pencil fa-lg"></i> Edit </span> 
             <span *ngIf="toggle" ><i class="fa fa-times fa-lg"></i> Cancel</span> 
         </a>
-        <a (click)="onClickDeleteComment( comment, id )" *ngIf="!toggle" class="card-link"> 
+        <a (click)="onClickDeleteComment( post, comment, id )" *ngIf="!toggle" class="card-link"> 
             <i class="fa fa-times fa-lg"></i> Delete
         </a>
     </span>

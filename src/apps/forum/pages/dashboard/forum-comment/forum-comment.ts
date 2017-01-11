@@ -49,7 +49,7 @@ export class ForumCommentPage implements OnInit {
         this.toggle = false
     }
 
-    onClickDeleteComment( comment, id ){
+    onClickDeleteComment( post, comment, id ){
         this.delete.emit();
     }
 

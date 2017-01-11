@@ -36,11 +36,12 @@
                     [user] = "user"
                     [post] = "post"
                     [comment] = "comment"
-                    (delete) = "onClickDeleteComment( comment, id )"
+                    (delete) = "onClickDeleteComment( post, comment, id )"
                     (update) = "onClickUpdateComment( post, comment )"
                 ></forum-comment-page>
             </ul>
             <span *ngIf="!toggle">
+                <span *ngIf="error"> -- {{ error }} -- </span>
                 <textarea class="form-control form-control-sm" type="text" name="content" rows="1" [(ngModel)]="comment.content" ></textarea>
                 <button class="btn btn-success btn-sm" (click)="onClickSubmitComment( post )">
                     <i class="fa fa-paper-plane fa-lg"></i> Post Comment
