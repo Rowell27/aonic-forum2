@@ -50,6 +50,7 @@ export class ForumCommentPage implements OnInit {
     }
 
     onClickDeleteComment( post, comment, id ){
+        if( confirm( "Are you sure you want to delete?" ) == false ) return;
         this.delete.emit();
     }
 

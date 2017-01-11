@@ -25,7 +25,6 @@ export class ForumHomePage implements OnInit {
     
     ngOnInit(){
         this.checkLoggedIn();
-        this.getUser();
         this.getPostLists();
     }
 
@@ -38,6 +37,7 @@ export class ForumHomePage implements OnInit {
     checkLoggedIn(){
         this.fireService.isLoggedIn( re => {
             this.key = re;
+            this.getUser();
         }, error => console.log( "Error: ", error ) );
     }
 
