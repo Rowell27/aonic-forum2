@@ -12,7 +12,7 @@
             <i class="fa fa-pencil fa-lg"></i> Update
         </button>
     </span>
-    <span>
+    <span *ngIf="user.name == comment.data.author">
         <a (click)="onClickToggleEdit( comment )" class="card-link" > 
             <span *ngIf="!toggle" ><i class="fa fa-pencil fa-lg"></i> Edit </span> 
             <span *ngIf="toggle" ><i class="fa fa-times fa-lg"></i> Cancel</span> 

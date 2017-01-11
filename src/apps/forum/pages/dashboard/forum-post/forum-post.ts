@@ -56,7 +56,7 @@ export class ForumPostPage implements OnInit {
 
     displayComments( data? ){
         if ( data === void 0 ) return;
-        for( let id of Object.keys( data ).reverse( ) ){
+        for( let id of Object.keys( data ) ){
             this.list_comments.push( { key: id, data: data[id] } );
         }
     }
@@ -110,7 +110,7 @@ export class ForumPostPage implements OnInit {
             console.log( "Success comment!" )
             this.comment.content = '';
             let newcomment = JSON.parse(JSON.stringify( re ))
-            this.list_comments.unshift( newcomment );
+            this.list_comments.push( newcomment );
         }, error => console.log( "Unable to create comment. ", error ) );
     }
     
