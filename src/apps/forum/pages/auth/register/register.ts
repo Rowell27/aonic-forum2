@@ -14,6 +14,9 @@ export class RegisterPage {
     user = <USER_DATA> {}
     key;
     error;
+    progress: boolean = false;
+    progress_value: number = 0;
+    urlPhoto:string = 'assets/image/user-profile.png';
     
     constructor( private router: Router, 
                  private fireService : FireBaseService,
@@ -32,6 +35,18 @@ export class RegisterPage {
         });
     }
 
+    renderUserProfile( url ) {
+        this.ngZone.run(() => {
+            this.urlPhoto = url;
+        });
+    }
+
+    renderProgress( value ) {
+        this.ngZone.run(() => {
+            this.progress = true;
+        });
+    }
+
     checkLoggedIn(){
         this.fireService.isLoggedIn( re => {
             console.log( "Session ID: " , re )
@@ -44,32 +59,55 @@ export class RegisterPage {
 
     validateInput(){
         if ( this.user.name == null || this.user.name == "" ) {
-            alert( "No user name provided" );
+            this.error = "No user name provided"
             return false;
         }
         if ( this.user.address == null || this.user.name == "" ) {
-            alert( "No user address provided" );
+            this.error = "No address provided"
             return false;
         }
         if ( this.user.mobile == null || this.user.name == "" ) {
-            alert( "No user mobile provided" );
+            this.error = "No mobile provided"
             return false;
         }
         if ( this.user.email == null || this.user.name == "" ) {
-            alert( "No user email provided" );
+            this.error = "No email provided"
             return false;
         }
         if ( this.user.password == null || this.user.name == "" ) {
-            alert( "No user password provided" );
+            this.error = "No password provided"
             return false;
         }
         return true;
     }
 
+    onChangeFile( $event ){
+        let file = $event.target.files[0];
+        console.log( "Target file: " , file )
+        if( file === void 0 ) return;
+        this.progress = true;
+
+        console.log( "File ", file );
+        let photoData = {
+            file: file,
+            path: "images/" + Date.now() + "/" + file.name
+        }
+
+        this.fireService.upload( photoData, uploaded => {
+            console.log( "Photo URL: " + uploaded.url );
+            this.renderUserProfile( uploaded.url );
+        }, error => {
+            alert( "Unable to upload! Error: " + error );
+        }, percent => {
+            this.progress_value = percent;
+            this.renderProgress( percent );
+        });
+    }
+
     onClickRegisterUser(){
         if( this.validateInput() == false) return;
         this.error = ""
-        this.fireService.register( this.user, () => {
+        this.fireService.register( this.user, "users", () => {
                 alert("Registration success! ");
                 this.router.navigate( ['/forum-home'] );
         }, error => {
@@ -97,5 +135,7 @@ export class RegisterPage {
             this.router.navigate( ['/login'] );
         }, error => console.log( "Unable to delete account" ) );
     }
+
+    
 
 }   

@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { FireBaseService } from '../../../app/firebase-service';
 
 import { USER_DATA } from '../../../app/firebase-interface';
+import { FireBaseServiceTest } from '../../../app/unit-test/unit-test';
 
 
 
@@ -21,6 +22,7 @@ export class LoginPage {
     constructor( 
         private router: Router, 
         private fireService : FireBaseService,
+        private fireTest : FireBaseServiceTest,
         private ngZone : NgZone  
      ) {
         this.checkLoggedIn();
@@ -32,13 +34,17 @@ export class LoginPage {
         });
     }
 
+    test(){
+        this.fireTest.test();
+    }
+
     valdiateInput(){
         if ( this.user.email == null || this.user.email == "" ) {
-            alert( "No user email provided" );
+            this.error = "No user email provided"
             return false;
         }
         if ( this.user.password == null || this.user.password == "" ) {
-            alert( "No user password provided" );
+            this.error = "No user password provided"
             return false;
         }
         return true;

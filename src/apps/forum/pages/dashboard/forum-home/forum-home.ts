@@ -102,7 +102,9 @@ export class ForumHomePage implements OnInit {
 
     onClickDeletePost( post, id ){
         this.fireService.delete( post.key, "posts", () => {
-            console.log( "Delete post successful" )
+            this.fireService.destroy( "comments/" + post.key, () => {
+                console.log( "Delete post successful" )
+            }, error => console.log( "Unable to delete comments in post! Error: ", error ) );
             this.list_posts.splice( id, 1 );
         }, error => console.log( "Unable to delete post! Error: ", error ) );
     }

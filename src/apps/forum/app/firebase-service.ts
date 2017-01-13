@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { auth, database, storage } from 'firebase';
 import * as firebase from 'firebase';
-import { USER_DATA, USER_LOGIN_DATA, RETURN_DATA } from './firebase-interface';
+import { USER_DATA, USER_LOGIN_DATA, FILE_UPLOAD, FILE_UPLOADED, RETURN_DATA } from './firebase-interface';
 
 
 
@@ -106,13 +106,13 @@ export class FireBaseService {
      * 
      * ***********************************************************/
 
-    register( user: USER_DATA, successCallback: () => void , failureCallback: ( error ) => void ) {
+    register( user: USER_DATA, refName: string, successCallback: () => void , failureCallback: ( error ) => void ) {
+        console.info( "User Data: ", JSON.stringify(user) )
         auth().createUserWithEmailAndPassword( user.email, user.password )
               .then( authData =>{
-                  console.log( "Success create account: ", authData )
                   this.key = authData['uid']
                   delete user.password;
-                  this.createUser( user, this.key, "users", () => {
+                  this.createUser( user, this.key, refName, () => {
                         successCallback();
                         localStorage.setItem( 'SESSION_ID', this.key );
                   }, failureCallback )
@@ -292,16 +292,57 @@ export class FireBaseService {
             .catch( error => failureCallback( error ) ) 
     }
 
-    // upload( data: FILE_UPLOAD, successCallback: (uploaded:FILE_UPLOADED) => void, failureCallback: (error:string) => void, progressCallback?: ( percent: number ) => void ) {
-    //     let ref = storage().ref("images");
-    //     ref.child("profile_pics").put( data.file );
-    // }
+    /**
+     * 
+    */
+
+    upload( data: FILE_UPLOAD, successCallback: (uploaded:FILE_UPLOADED) => void, failureCallback: (error:string) => void, progressCallback?: ( percent: number ) => void ) {
+        if ( data.ref === void 0 ) data.ref = Date.now() + '/' + data.file.name;
+
+        let file = data.file;
+        if ( data.blob !== void 0 ) file = data.blob;
+        else if ( data.base64 !== void 0 ) file = this.b64toBlob( data.base64, data.base64 );
+
+        console.log('file:', file);
+        let task = storage().ref( data.ref )
+        .put( file, {contentType: data.file.type});
+
+        task.then( snapshot => {
+        storage().ref( data.ref ).getDownloadURL().then( url => {
+            let uploaded = { url: url, ref: data.ref };
+            successCallback( uploaded );
+        });
+        })
+        .catch( e => failureCallback( e.message ) );
+
+        task.on( firebase.storage.TaskEvent.STATE_CHANGED, snapshot => {
+        let percent = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+        progressCallback( percent );
+        });
+    }
+
+  
+    b64toBlob(b64Data, contentType='', sliceSize=512) {
+        var byteCharacters = atob(b64Data);
+        var byteArrays = [];
+        for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+        var slice = byteCharacters.slice(offset, offset + sliceSize);
+        var byteNumbers = new Array(slice.length);
+        for (var i = 0; i < slice.length; i++) {
+            byteNumbers[i] = slice.charCodeAt(i);
+        }
+        var byteArray = new Uint8Array(byteNumbers);
+        byteArrays.push(byteArray);
+        }
+        var blob = new Blob(byteArrays, {type: contentType});
+        return blob;
+    }
 
     /****************************************************************
      * @Guide in using delete() method:
      *      This method deletes the data in database.
      * 
-     * @Flow of logout() method:
+     * @Flow of delete() method:
      * -- If "success", data of the specified "key" will be deleted.
      * -- If "failure", failureCallback is called with error details. 
      * 
@@ -326,6 +367,31 @@ export class FireBaseService {
     }
 
     /****************************************************************
+     * @Guide in using destroy() method:
+     *      This method deletes all of the data in a category item.
+     * 
+     * @Flow of destroy() method:
+     * -- If "success", data of the specified "key" will be deleted.
+     * -- If "failure", failureCallback is called with error details. 
+     * 
+     * @example How to Use:
+     * 
+     * destroy( "category", () => {
+     *     //All data deleted
+     * }, error => {
+     *     //An error happened 
+     * });
+     * 
+     ************************************************************************/
+
+    destroy( refName: string, successCallback: () => void, failureCallback: ( error ) => void ){
+        let ref = database().ref( refName );
+        ref.remove()
+            .then( () => successCallback() )
+            .catch( error => failureCallback( error ) );
+    }
+
+    /****************************************************************
      * @Guide in using logout() method:
      *      This method logs out the user, then clears values of LocalStorage and "key" variable.
      * 
@@ -340,11 +406,11 @@ export class FireBaseService {
      * 
      ************************************************************************/
 
-    logout( callback? ){
+    logout( callback? : () => void ){
         auth().signOut();
         localStorage.removeItem( "SESSION_ID" );
         this.key = null;
-        callback;
+        if(callback) callback();
     }
 
     //This method may provide error, since it needs the user to be re-authenticated 

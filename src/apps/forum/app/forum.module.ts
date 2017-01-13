@@ -10,6 +10,7 @@ import { ForumHomePage } from '../pages/dashboard/forum-home/forum-home';
 import { ForumPostPage } from '../pages/dashboard/forum-post/forum-post';
 import { ForumCommentPage } from '../pages/dashboard/forum-comment/forum-comment';
 import { FireBaseService } from './firebase-service';
+import { FireBaseServiceTest } from '../app/unit-test/unit-test';
 
 const appRoutes: Routes = [
     { path: '', component: LoginPage },
@@ -32,7 +33,7 @@ const appRoutes: Routes = [
         FormsModule,
         RouterModule.forChild( appRoutes )
     ],
-    providers: [ FireBaseService ]
+    providers: [ FireBaseService, FireBaseServiceTest ]
 })
 
 export class ForumModule {}

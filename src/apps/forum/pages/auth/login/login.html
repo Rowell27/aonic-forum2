@@ -1,8 +1,7 @@
 <base-nav></base-nav>
 
 <div class="container fluid">
-
-    <section *ngIf=" ! loginData ">
+    <section *ngIf=" ! loginData " class="container form-container" >
         <div class="jumbotron">
             <h3>Login</h3>
         </div>
@@ -23,5 +22,9 @@
             <i class="fa fa-check fa-lg"></i> Login
         </button>
     </section>
-        
+    
+    <br><hr>
+    <button class="btn btn-primary btn-block" (click)="test()">
+            <i class="fa fa-check fa-lg"></i> Unit Test - User
+    </button>
 </div>

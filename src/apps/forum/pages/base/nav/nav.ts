@@ -19,7 +19,7 @@ export class BaseNav {
     checkLoggedIn(){
         this.fireService.isLoggedIn( re => {
             this.key = re;
-        }, error => console.info( "Alert! ", error ) );
+        }, error => {} );
     }
 
     onClickLogoutUser(){
