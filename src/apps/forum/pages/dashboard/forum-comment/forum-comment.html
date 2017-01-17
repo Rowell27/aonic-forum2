@@ -10,7 +10,7 @@
     <div *ngIf="toggle" class="comment-content">
         <textarea class="form-control form-control-sm" type="text" name="content" [(ngModel)]="comment.data.content"></textarea>
     </div>
-    <div *ngIf="user.name == comment.data.author" class="container">
+    <div *ngIf="key == comment.data.uid" class="container">
         <a (click)="onClickUpdateComment( post, comment )" *ngIf="toggle" class="card-link"> 
             <i class="fa fa-pencil fa-lg"></i> Update
         </a>

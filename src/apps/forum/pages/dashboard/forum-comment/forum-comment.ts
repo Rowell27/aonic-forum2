@@ -38,8 +38,8 @@ export class ForumCommentPage implements OnInit {
     }
 
     // getCommentOwner(){
-    //     console.log( "Post owner UID: " + this.post.data.uid )
-    //     this.fireService.get( this.post.data.uid, "users", data => {
+    //     console.log( "Post owner UID: " + this.comment.data.uid )
+    //     this.fireService.get( this.comment.data.uid, "users", data => {
     //         this.renderData( data );
     //         console.log( "PostOwnerContent: " + this.user.name );
     //         if ( this.user.photoUrl ) return this.photoUrl = this.user.photoUrl;

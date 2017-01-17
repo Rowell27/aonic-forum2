@@ -34,6 +34,7 @@ export interface POST_DATA extends USER_DATA{
 
 export interface COMMENT_DATA extends POST_DATA{
     content: string;
+    created: number;
 }
 
 export interface RETURN_DATA {
