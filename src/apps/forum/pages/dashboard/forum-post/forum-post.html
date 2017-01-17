@@ -1,35 +1,36 @@
 
 <li class="card">
     <div class="card-block">
-        <span *ngIf="!toggle">
-            <h4 class="card-title">{{ post.data.author }}</h4>
+        <span *ngIf="!toggle && user">
+            <img class="profile-post" [src]="photoUrl">
+            <h5 class="card-title">{{ user.name }}</h5>
             <h6 *ngIf="!post.data.updated" class="card-subtitle mb-2 text-muted">Date Posted: <i>{{ post.data.created }}</i></h6>
             <h6 *ngIf="post.data.updated" class="card-subtitle mb-2 text-muted">Date Posted: <i>{{ post.data.updated }} (Edited) </i></h6>
             <p class="card-text">{{ post.data.content }}</p>
         </span> 
-        <hr>
+        <hr *ngIf="!toggle">
         <span *ngIf="toggle">
             <textarea class="form-control form-control-sm" type="text" name="content" [(ngModel)]="post.data.content"></textarea>
-            <button class="btn btn-warning btn-sm" (click)="onClickUpdatePost( post )">
-                <i class="fa fa-pencil fa-lg"></i> Update
-            </button>
         </span>
-
-        <a (click)="onClickViewComments( )" *ngIf="!toggle" class="card-link" > 
-            <span *ngIf="!toggle_comments" ><i class="fa fa-caret-down fa-lg"></i> View Comments</span> 
-            <span *ngIf="toggle_comments" ><i class="fa fa-caret-up fa-lg"></i> Hide Comments</span> 
-        </a>
-        <span *ngIf="user.name == post.data.author">
-            <a (click)="onClickToggleEdit( post )" class="card-link" > 
-                <span *ngIf="!toggle" ><i class="fa fa-pencil fa-lg"></i> Edit Post</span> 
-                <span *ngIf="toggle" ><i class="fa fa-times fa-lg"></i> Cancel</span> 
+        <div class="container">
+            <a (click)="onClickViewComments( )" *ngIf="!toggle" class="card-link" > 
+                <span *ngIf="!toggle_comments" ><i class="fa fa-caret-down fa-lg"></i> View Comments</span> 
+                <span *ngIf="toggle_comments" ><i class="fa fa-caret-up fa-lg"></i> Hide Comments</span> 
             </a>
-            <a (click)="onClickDeletePost( post, id)" *ngIf="!toggle" class="card-link"> 
-                <i class="fa fa-times fa-lg"></i> Delete Post
-            </a>
-        </span>
-
-        <hr>
+            <span *ngIf="key == post.data.uid">
+                <a (click)="onClickUpdatePost( post )" *ngIf="toggle" class="card-link"> 
+                    <i class="fa fa-pencil fa-lg"></i> Update
+                </a>
+                <a (click)="onClickToggleEdit( post )" class="card-link" > 
+                    <span *ngIf="!toggle" ><i class="fa fa-pencil fa-lg"></i> Edit Post</span> 
+                    <span *ngIf="toggle" ><i class="fa fa-times fa-lg"></i> Cancel</span> 
+                </a>
+                <a (click)="onClickDeletePost( post, id)" *ngIf="!toggle" class="card-link"> 
+                    <i class="fa fa-times fa-lg"></i> Delete Post
+                </a>
+            </span>
+        </div>
+        <hr *ngIf="!toggle">
         <div class="container-fluid" *ngIf="toggle_comments">
             <ul class="list-group list-group-flush" *ngFor="let comment of list_comments, let id = index">
                 <forum-comment-page
@@ -40,13 +41,13 @@
                     (update) = "onClickUpdateComment( post, comment )"
                 ></forum-comment-page>
             </ul>
-            <span *ngIf="!toggle">
+            <div *ngIf="!toggle" class="container">
                 <span *ngIf="error"> -- {{ error }} -- </span>
                 <textarea class="form-control form-control-sm" type="text" name="content" rows="1" [(ngModel)]="comment.content" ></textarea>
                 <button class="btn btn-success btn-sm" (click)="onClickSubmitComment( post )">
                     <i class="fa fa-paper-plane fa-lg"></i> Post Comment
                 </button>
-            </span>
+            </div>
         </div>
     </div>
 </li>

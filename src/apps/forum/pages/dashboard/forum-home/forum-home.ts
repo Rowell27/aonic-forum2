@@ -13,10 +13,11 @@ import { POST_DATA } from '../../../app/firebase-interface';
 
 export class ForumHomePage implements OnInit {       
     
-    key;
-    list_posts = [];
     post = <POST_DATA> {}
     user = <USER_DATA> {}
+    photoUrl = 'assets/image/user-profile.png';
+    key;
+    list_posts = [];
 
     constructor( private router: Router, 
                  private fireService : FireBaseService,
@@ -28,9 +29,9 @@ export class ForumHomePage implements OnInit {
         this.getPostLists();
     }
 
-    renderPage( re ) {
+    renderPage( data ) {
         this.ngZone.run(() => {
-            this.user = re;
+            this.user = data;
         });
     }
 
@@ -42,8 +43,9 @@ export class ForumHomePage implements OnInit {
     }
 
     getUser(){
-        this.fireService.get( this.key, "users", re => {
-            this.renderPage( re );
+        this.fireService.get( this.key, "users", data => {
+            this.renderPage( data );
+            if ( this.user.photoUrl ) return this.photoUrl = this.user.photoUrl;
         }, error => console.log( "Unable to get user info. ", error ) );
     }
 
@@ -78,7 +80,7 @@ export class ForumHomePage implements OnInit {
         let data = {
             content: this.post.content,
             created: date.toDateString(),
-            author: this.user.name
+            uid: this.key
         }
         this.fireService.create( data, "posts", re => {
             this.post.content = '';

@@ -1,11 +1,8 @@
-a{
-    cursor: pointer;
-}
-textarea{
-    resize: none;
+.comment-content{
+    width:100%;
 }
 
-.profile-post{
+.profile-comment{
     float: left;
     margin-right: 10px;
     margin-bottom: 10px;
@@ -13,3 +10,4 @@ textarea{
     max-width: 3.5em;
     max-height: 3.5em;
 }
+

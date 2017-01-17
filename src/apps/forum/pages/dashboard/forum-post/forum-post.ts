@@ -12,18 +12,19 @@ import { USER_DATA, POST_DATA, COMMENT_DATA } from '../../../app/firebase-interf
 
 export class ForumPostPage implements OnInit {       
     
-    @Input() user: USER_DATA;
     @Input() post;
-    @Input() postList=[];
     @Output() delete = new EventEmitter();    
     @Output() update = new EventEmitter();    
-    key;
-    error:string = '';
+    
+    comment = <COMMENT_DATA> {}
+    user: USER_DATA;
+    list_comments = []
+    photoUrl = 'assets/image/user-profile.png';
     toggle: boolean = false;
     toggle_comments: boolean = false;
+    error:string = '';
+    key;
     temp;
-    comment = <COMMENT_DATA> {}
-    list_comments = []
 
     constructor( private router: Router, 
                  private fireService : FireBaseService,
@@ -32,17 +33,21 @@ export class ForumPostPage implements OnInit {
     
     ngOnInit(){
         this.getCommentsLists();
+        this.getPostOwner();
     }
 
-    renderPage( re ) {
+    renderData( data ) {
         this.ngZone.run(() => {
-            this.user = re;
+            this.user = data;
         });
     }
 
-    getUser(){
-        this.fireService.get( this.key, "users", re => {
-            this.renderPage( re );
+    getPostOwner(){
+        console.log( "Post owner UID: " + this.post.data.uid )
+        this.fireService.get( this.post.data.uid, "users", data => {
+            this.renderData( data );
+            console.log( "PostOwnerContent: " + this.user.name );
+            if ( this.user.photoUrl ) return this.photoUrl = this.user.photoUrl;
         }, error => console.log( "Unable to get user info. ", error ) );
     }
 
@@ -112,7 +117,7 @@ export class ForumPostPage implements OnInit {
         let time = new Date().getTime();
         let date = new Date(time);
         let data = {
-            author: this.user.name,
+            uid: this.key,
             content: this.comment.content,
             created: date.toDateString()
         }

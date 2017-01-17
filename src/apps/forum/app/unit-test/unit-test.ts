@@ -79,7 +79,7 @@ export class FireBaseServiceTest {
 
     /**
      * Unit Test Module for Users
-     * */
+     */
     deleteAll( index = 0, callback ){
         if(index < this.userIDs.length){
              this.deleteUserTest( this.userIDs[index], () => {

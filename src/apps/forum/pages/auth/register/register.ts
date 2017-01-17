@@ -16,7 +16,8 @@ export class RegisterPage {
     error;
     progress: boolean = false;
     progress_value: number = 0;
-    urlPhoto:string = 'assets/image/user-profile.png';
+    photoUrl = 'assets/image/user-profile.png';
+
     
     constructor( private router: Router, 
                  private fireService : FireBaseService,
@@ -37,7 +38,8 @@ export class RegisterPage {
 
     renderUserProfile( url ) {
         this.ngZone.run(() => {
-            this.urlPhoto = url;
+            this.user.photoUrl = url;
+            this.photoUrl = url;
         });
     }
 
@@ -53,6 +55,7 @@ export class RegisterPage {
             this.key = re;
             this.fireService.get( this.key, "users", data => {
                 this.renderData( data );
+                if ( this.user.photoUrl ) return this.photoUrl = this.user.photoUrl;
             }, error => console.log( "Unable to retrieved user data from server. Error: ", error ) );
         }, error => console.info( "Alert! ", error ) );
     }
@@ -87,7 +90,6 @@ export class RegisterPage {
         if( file === void 0 ) return;
         this.progress = true;
 
-        console.log( "File ", file );
         let photoData = {
             file: file,
             path: "images/" + Date.now() + "/" + file.name
@@ -135,7 +137,5 @@ export class RegisterPage {
             this.router.navigate( ['/login'] );
         }, error => console.log( "Unable to delete account" ) );
     }
-
-    
 
 }   

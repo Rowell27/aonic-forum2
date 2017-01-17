@@ -10,14 +10,14 @@
     </div>
 </section>
 
-<section *ngIf=" key ">
+<section *ngIf=" key">
     
     <h3>Dashboard</h3>
     <div class="container-fluid">
         <span>
-            <!--<img src="" alt="profile_pic">-->
+            <img class="profile" [src]="photoUrl">
             <h3>{{ user.name }}</h3>
-            <p>{{ user.email }}</p>
+            <p><i>{{ user.email }}</i></p>
         </span>
         <span class="form-group">
             <textarea class="form-control form-control-sm" [(ngModel)]="post.content" type="text" name="content"></textarea>
@@ -29,7 +29,6 @@
     <div class="container-fluid card-block">
         <ul class="list-group list-group-flush" *ngFor="let post of list_posts, let id = index">
         <forum-post-page 
-            [user] = "user"
             [post] = "post"
             (delete) = "onClickDeletePost( post, id )"
             (update) = "onClickUpdatePost( post )"

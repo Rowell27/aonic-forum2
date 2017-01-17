@@ -292,9 +292,28 @@ export class FireBaseService {
             .catch( error => failureCallback( error ) ) 
     }
 
-    /**
+    /****************************************************************
+     * @Guide in using upload() method:
+     *      This method uploads file(s), like images, in Firebase storage.
      * 
-    */
+     * @Flow of list() method:
+     * -- If "success", successCallback is called with "uploaded" as returned value.
+     * -- If "failure", failureCallback is called with error details. 
+     * 
+     * @example How to Use:
+     * 
+     * let photoData = {
+     *      file: file,
+     *      path: "images/" + Date.now() + "/" + file.name
+     *  }
+     * 
+     * upload( photoData, uploaded => {
+     *     //Photo uploaded...
+     * }, error => {
+     *     //An error happened 
+     * });
+     * 
+     ************************************************************************/
 
     upload( data: FILE_UPLOAD, successCallback: (uploaded:FILE_UPLOADED) => void, failureCallback: (error:string) => void, progressCallback?: ( percent: number ) => void ) {
         if ( data.ref === void 0 ) data.ref = Date.now() + '/' + data.file.name;
@@ -313,7 +332,7 @@ export class FireBaseService {
             successCallback( uploaded );
         });
         })
-        .catch( e => failureCallback( e.message ) );
+        .catch( error => failureCallback( error.message ) );
 
         task.on( firebase.storage.TaskEvent.STATE_CHANGED, snapshot => {
         let percent = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
@@ -337,6 +356,14 @@ export class FireBaseService {
         var blob = new Blob(byteArrays, {type: contentType});
         return blob;
     }
+
+    deletePhoto( refName: string, successCallback: () => void, failureCallback: (error:string) => void ) {
+        let ref = storage().ref().child( refName )
+        ref.delete()
+        .then( successCallback )
+        .catch( error => failureCallback( error.message ) );
+    }
+
 
     /****************************************************************
      * @Guide in using delete() method:

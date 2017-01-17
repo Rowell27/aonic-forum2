@@ -12,15 +12,16 @@ import { USER_DATA, POST_DATA, COMMENT_DATA } from '../../../app/firebase-interf
 
 export class ForumCommentPage implements OnInit {       
     
-    key;
-    comments = <COMMENT_DATA> {};
-    toggle: boolean = false;
-    temp;    
-    @Input() user: USER_DATA;
     @Input() post: POST_DATA;
     @Input() comment;
     @Output() delete = new EventEmitter();
     @Output() update = new EventEmitter();
+    user: USER_DATA;
+    comments = <COMMENT_DATA> {};
+    toggle: boolean = false;
+    photoUrl = 'assets/image/user-profile.png';
+    key;
+    temp;    
 
     constructor( private router: Router, 
                  private fireService : FireBaseService,
@@ -30,10 +31,20 @@ export class ForumCommentPage implements OnInit {
     ngOnInit(){
     }
 
-    renderPage( re ) {
+    renderData( data ) {
         this.ngZone.run(() => {
+            this.user = data;
         });
     }
+
+    // getCommentOwner(){
+    //     console.log( "Post owner UID: " + this.post.data.uid )
+    //     this.fireService.get( this.post.data.uid, "users", data => {
+    //         this.renderData( data );
+    //         console.log( "PostOwnerContent: " + this.user.name );
+    //         if ( this.user.photoUrl ) return this.photoUrl = this.user.photoUrl;
+    //     }, error => console.log( "Unable to get user info. ", error ) );
+    // }
 
     onClickToggleEdit( comment ){
         if( this.toggle == false ) {
