@@ -25,9 +25,16 @@
             bottom: .6em;
         }
         .fa-circle{
-            opacity: 0.25;
+            opacity: 0.3;
             color: lightslategray;
         }
+
+        // .trash{
+        //     position: absolute;
+        //     z-index: 100;
+        //     left: 2.5em;
+        //     bottom: .6em;
+        // }
 
         input {
             position: absolute;
@@ -40,9 +47,15 @@
             opacity: .001;
         }
         .progressbar{
-          position: absolute;
-          width: 100%;
-          height: 8px;
-          bottom:0;
+            position: absolute;
+            width: 100%;
+            height: 8px;
+            bottom:0;
         }
 }
+
+// .delete-photo{
+//     position: relative;
+//     margin-right: auto;
+//     margin-left: auto;
+// }

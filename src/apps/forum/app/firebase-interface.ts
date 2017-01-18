@@ -20,6 +20,7 @@ export interface USER_DATA extends USER_LOGIN_DATA {
     mobile: string;
     address: string;
     photoUrl?: string;
+    photoRef?: string;
 }
 
 /****

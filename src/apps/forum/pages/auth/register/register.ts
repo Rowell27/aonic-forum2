@@ -14,6 +14,7 @@ export class RegisterPage {
     user = <USER_DATA> {}
     key;
     error;
+    temp;
     progress: boolean = false;
     progress_value: number = 0;
     photoUrl = 'assets/image/user-profile.png';
@@ -36,10 +37,11 @@ export class RegisterPage {
         });
     }
 
-    renderUserProfile( url ) {
+    renderUserProfile( file ) {
         this.ngZone.run(() => {
-            this.user.photoUrl = url;
-            this.photoUrl = url;
+            this.user.photoUrl = file.url;
+            this.user.photoRef = file.ref
+            this.photoUrl = file.url;
         });
     }
 
@@ -84,10 +86,20 @@ export class RegisterPage {
         return true;
     }
 
+    deletePhoto( ref ){
+        this.fireService.deletePhoto( ref, () => {
+            console.log( "Old photo deleted" );
+        }, error => console.log( "Unable to delete photo. Error: ", error ) );
+    }
+
     onChangeFile( $event ){
         let file = $event.target.files[0];
         console.log( "Target file: " , file )
+
         if( file === void 0 ) return;
+        if( this.user.photoUrl ){
+            this.deletePhoto( this.user.photoRef );
+        }
         this.progress = true;
 
         let photoData = {
@@ -97,12 +109,13 @@ export class RegisterPage {
 
         this.fireService.upload( photoData, uploaded => {
             console.log( "Photo URL: " + uploaded.url );
-            this.renderUserProfile( uploaded.url );
+            this.renderUserProfile( uploaded );
         }, error => {
             alert( "Unable to upload! Error: " + error );
         }, percent => {
             this.progress_value = percent;
             this.renderProgress( percent );
+            if( this.progress_value == 100 ) return this.progress = false;
         });
     }
 
@@ -122,6 +135,7 @@ export class RegisterPage {
     onClickUpdateUser(){
         this.fireService.update( this.user, this.key, "users", () => {
             alert( "Update success!" );
+            this.router.navigate( ['/forum-home'] );
         }, error => console.log( "Unable to update user: ", error ) );
     }
 
@@ -136,6 +150,13 @@ export class RegisterPage {
             alert( "Account deleted!" );
             this.router.navigate( ['/login'] );
         }, error => console.log( "Unable to delete account" ) );
+    }
+
+    onClickDeleteUserPhoto( ){
+        if( confirm( "Are you sure you want to delete?" ) == false ) return;
+        if( !this.user.photoUrl ) return;
+        this.deletePhoto( this.user.photoRef );
+        this.photoUrl = 'assets/image/user-profile.png';
     }
 
 }   

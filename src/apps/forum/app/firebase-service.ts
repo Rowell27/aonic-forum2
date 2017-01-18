@@ -107,7 +107,7 @@ export class FireBaseService {
      * ***********************************************************/
 
     register( user: USER_DATA, refName: string, successCallback: () => void , failureCallback: ( error ) => void ) {
-        console.info( "User Data: ", JSON.stringify(user) )
+        console.info( "User Data: ", user.email, user.password )
         auth().createUserWithEmailAndPassword( user.email, user.password )
               .then( authData =>{
                   this.key = authData['uid']
