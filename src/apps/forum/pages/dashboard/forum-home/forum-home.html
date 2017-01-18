@@ -14,17 +14,25 @@
     
     <h3>Dashboard</h3>
     <div class="container-fluid">
-        <span>
-            <img class="profile" [src]="photoUrl">
-            <h3>{{ user.name }}</h3>
-            <p><i>{{ user.email }}</i></p>
-        </span>
-        <span class="form-group">
-            <textarea class="form-control form-control-sm" [(ngModel)]="post.content" type="text" name="content"></textarea>
-            <button class="btn btn-primary btn-sm btn-pos-right" (click)="onClickSubmitPost()">
-                <i class="fa fa-paper-plane fa-lg"></i> Post
-            </button> 
-        </span>
+        <img class="profile" [src]="photoUrl">
+        <h3>{{ user.name }}</h3>
+        <p><i>{{ user.email }}</i></p>
+    </div>
+    <div class="container-fluid form-group">
+        <textarea class="form-control form-control-sm" [(ngModel)]="post.content" type="text" name="content"></textarea>
+        <div class="post-photo">
+            <img [src]="postPhotoUrl">
+            <span class="camera fa-stack fa-2x">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-plus fa-stack-1x"></i>
+            </span>
+            <input type="file" name="photo" #file (change)="onChangeFile( $event )" accept="image/*">
+            <progress *ngIf="progress" class="progressbar" value="{{ progress_value }}" max="100">
+            </progress>
+        </div><br><br><br><br>
+        <button class="btn btn-primary btn-md btn-pos-right" (click)="onClickSubmitPost()">
+            <i class="fa fa-paper-plane fa-lg"></i> Post
+        </button>
     </div>
     <div class="container-fluid card-block">
         <ul class="list-group list-group-flush" *ngFor="let post of list_posts, let id = index">

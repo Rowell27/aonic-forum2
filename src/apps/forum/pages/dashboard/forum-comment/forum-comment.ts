@@ -16,8 +16,9 @@ export class ForumCommentPage implements OnInit {
     @Input() comment;
     @Output() delete = new EventEmitter();
     @Output() update = new EventEmitter();
-    user: USER_DATA;
+
     comments = <COMMENT_DATA> {};
+    user: USER_DATA;
     toggle: boolean = false;
     photoUrl = 'assets/image/user-profile.png';
     key;
@@ -29,6 +30,8 @@ export class ForumCommentPage implements OnInit {
     }
     
     ngOnInit(){
+        this.getCommentOwner();
+        this.getUserID();
     }
 
     renderData( data ) {
@@ -37,14 +40,16 @@ export class ForumCommentPage implements OnInit {
         });
     }
 
-    // getCommentOwner(){
-    //     console.log( "Post owner UID: " + this.comment.data.uid )
-    //     this.fireService.get( this.comment.data.uid, "users", data => {
-    //         this.renderData( data );
-    //         console.log( "PostOwnerContent: " + this.user.name );
-    //         if ( this.user.photoUrl ) return this.photoUrl = this.user.photoUrl;
-    //     }, error => console.log( "Unable to get user info. ", error ) );
-    // }
+    getUserID(){
+        this.key = localStorage.getItem( 'SESSION_ID' );
+    }
+
+    getCommentOwner(){
+        this.fireService.get( this.comment.data.uid, "users", data => {
+            this.renderData( data );
+            if ( this.user.photoUrl ) return this.photoUrl = this.user.photoUrl;
+        }, error => console.log( "Unable to get user info. ", error ) );
+    }
 
     onClickToggleEdit( comment ){
         if( this.toggle == false ) {

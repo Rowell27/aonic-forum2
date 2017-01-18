@@ -11,7 +11,7 @@
                     <i class="fa fa-circle fa-stack-2x"></i>
                     <i class="fa fa-camera fa-stack-1x"></i>
                 </span>
-                <input type="file" name="inputFile" [(ngModel)]="inputFileValue" #file (change)="onChangeFile( $event )" accept="image/*">
+                <input type="file" name="upload" #file (change)="onChangeFile( $event )" accept="image/*">
                 <progress *ngIf="progress" class="progressbar" value="{{ progress_value }}" max="100">
                 </progress>
             </div>

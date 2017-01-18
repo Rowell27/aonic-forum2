@@ -16,6 +16,7 @@ export class ForumHomePage implements OnInit {
     post = <POST_DATA> {}
     user = <USER_DATA> {}
     photoUrl = 'assets/image/user-profile.png';
+    postPhotoUrl = 'assets/image/post-photo.png';
     key;
     list_posts = [];
 
@@ -93,7 +94,7 @@ export class ForumHomePage implements OnInit {
         let time = new Date().getTime()
         let date = new Date(time)
         let data = {
-            author: post.data.author,
+            uid: post.data.uid,
             updated: date.toDateString(),
             content: post.data.content 
         }

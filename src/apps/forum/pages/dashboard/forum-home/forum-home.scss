@@ -1,6 +1,6 @@
 button.btn-pos-right{
+    position: relative;
     // float: right;
-    margin-bottom: 10px;
 }
 
 
@@ -14,5 +14,45 @@ button.btn-pos-right{
 }
 
 forum-post-page{
-    margin-top:10px;
+    margin-top: 10px;
+}
+
+.post-photo {
+    position: absolute;
+    border-radius: 5px;
+    max-width: 5em;
+    max-height: 5em;
+    overflow: hidden;
+
+    img {
+        width: 100%;
+    }
+
+    .camera {
+        position: absolute;
+        z-index: 80;
+        left: .3em;
+        bottom: .3em;
+    }
+    .fa-circle{
+        opacity: 0.50;
+        color: lightslategray;
+    }
+
+    input {
+        position: absolute;
+        z-index: 100;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        font-size: 10em;
+        opacity: .001;
+    }
+    .progressbar{
+        position: absolute;
+        width: 100%;
+        height: 8px;
+        bottom:0;
+    }
 }
