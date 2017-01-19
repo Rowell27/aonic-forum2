@@ -111,11 +111,13 @@ export class FireBaseService {
         auth().createUserWithEmailAndPassword( user.email, user.password )
               .then( authData =>{
                   this.key = authData['uid']
+                //   console.log( "AuthData: ", this.key );
                   delete user.password;
                   this.createUser( user, this.key, refName, () => {
+                        // console.log( "User to Push", JSON.stringify(user) );
                         successCallback();
                         localStorage.setItem( 'SESSION_ID', this.key );
-                  }, failureCallback )
+                  }, error=> failureCallback( error ) )
               })
               .catch( error =>  failureCallback( error ) );
     }
