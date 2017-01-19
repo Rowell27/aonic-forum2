@@ -14,12 +14,10 @@ export class FireBaseServiceTest {
     constructor( private fireService: FireBaseService ) { }
 
     test( ){ 
-        // this.initializeFiftyUsers();
-        // this.testUsers(0, ()=>{
-        //     console.log( "Test finished..." )
-        // });
-        this.addUserPhotoTest( "username40", () => {
-        })
+        this.initializeFiftyUsers();
+        this.testUsers(0, ()=>{
+            console.log( "Test finished..." )
+        });
     }
 
     initializeFiftyUsers(){
