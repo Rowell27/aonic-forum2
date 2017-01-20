@@ -24,7 +24,9 @@ export class FireBaseServiceTest {
 
     postUnitTest(){
         this.initializeFiftyIDs();
-        this.testPost(0, () => { });
+        this.testPost(0, () => {
+            console.log( "Test finished..." )
+        });
     }
 
     initializeFiftyIDs(){
@@ -107,9 +109,14 @@ export class FireBaseServiceTest {
             
             if( index !=0 && index % 2 === 0 && index % 3 === 0 ) {
                 this.createPostTest( this.dataIDs[index], data => {
-                        this.update( this.dataIDs[index], data.key, 'test/users', () => {
-                            this
-                        });   
+                    this.update( this.dataIDs[index], data.key, 'test/posts', () => {
+                        this.delete( this.dataIDs[index], data.key, "test/posts", () => {
+                        this.logout( () =>{   
+                            index++;            
+                            this.testUsers( index, doneCallback );
+                        });
+                    });
+                    });   
                 });
             } else if( index !=0 && index % 3 === 0){
                 console.log("Counter " + index);
