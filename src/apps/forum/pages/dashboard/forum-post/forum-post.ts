@@ -23,7 +23,7 @@ export class ForumPostPage implements OnInit {
     toggle: boolean = false;
     toggle_comments: boolean = false;
     error:string = '';
-    key;
+    key = null;
     temp;
 
     constructor( private router: Router, 

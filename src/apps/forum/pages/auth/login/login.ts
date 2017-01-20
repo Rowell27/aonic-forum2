@@ -15,7 +15,7 @@ import { FireBaseServiceTest } from '../../../app/unit-test/unit-test';
 export class LoginPage {
 
     user = <USER_DATA> {};
-    key: string;
+    key = null;
     data = {};
     error = "";
     

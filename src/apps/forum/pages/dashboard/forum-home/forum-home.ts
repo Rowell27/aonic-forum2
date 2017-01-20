@@ -17,7 +17,7 @@ export class ForumHomePage implements OnInit {
     user = <USER_DATA> {}
     photoUrl = 'assets/image/user-profile.png';
     postPhotoUrl = 'assets/image/post-photo.png';
-    key;
+    key = null;
     list_posts = [];
 
     constructor( private router: Router, 

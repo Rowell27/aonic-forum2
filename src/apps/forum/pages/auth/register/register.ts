@@ -12,7 +12,7 @@ import { USER_DATA } from '../../../app/firebase-interface';
 export class RegisterPage {
 
     user = <USER_DATA> {}
-    key;
+    key = null;
     error;
     temp;
     progress: boolean = false;

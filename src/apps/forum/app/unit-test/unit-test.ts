@@ -24,20 +24,22 @@ export class FireBaseServiceTest {
 
     postUnitTest(){
         this.initializeFiftyIDs();
-        this.testPost(0, () => {
+        this.testPosts(0, () => {
             console.log( "Test finished..." )
         });
     }
 
     initializeFiftyIDs(){
-        for( let ctr = 1; ctr <=12; ctr ++ ){
+        for( let ctr = 1; ctr <=5; ctr ++ ){
             let id = 'username' + ctr;
             this.dataIDs.push(id);
         }
         console.info( "Array length: ", this.dataIDs.length );
     }
 
-
+    /**
+     * Unit Test for USERS 
+     */
     testUsers( index: number, doneCallback ){
 
         console.log('Index:', index);
@@ -102,29 +104,33 @@ export class FireBaseServiceTest {
         }
     }
 
-    testPost( index: number, doneCallback ){
+
+    /**
+     * Unit Test for POST
+     */
+    testPosts( index: number, doneCallback ){
 
         let len = this.dataIDs.length - 1;
         if ( index <= len ){
             
             if( index !=0 && index % 2 === 0 && index % 3 === 0 ) {
                 this.createPostTest( this.dataIDs[index], data => {
-                    this.update( this.dataIDs[index], data.key, 'test/posts', () => {
+                    this.updatePost( this.dataIDs[index], data.key, 'test/posts', () => {
                         this.delete( this.dataIDs[index], data.key, "test/posts", () => {
-                        this.logout( () =>{   
-                            index++;            
-                            this.testUsers( index, doneCallback );
+                            this.logout( () =>{   
+                                index++;            
+                                this.testPosts( index, doneCallback );
+                            });
                         });
-                    });
                     });   
                 });
             } else if( index !=0 && index % 3 === 0){
                 console.log("Counter " + index);
                 this.createPostTest( this.dataIDs[index], data => {
-                    this.update( this.dataIDs[index], data.key, "test/posts", () => {
+                    this.updatePost( this.dataIDs[index], data.key, "test/posts", () => {
                         this.logout( () =>{   
                             index++;            
-                            this.testUsers( index, doneCallback );
+                            this.testPosts( index, doneCallback );
                         });
                     });
                 });
@@ -133,7 +139,7 @@ export class FireBaseServiceTest {
                     this.delete( this.dataIDs[index], data.key, "test/posts", () => {
                         this.logout( () =>{   
                             index++;            
-                            this.testUsers( index, doneCallback );
+                            this.testPosts( index, doneCallback );
                         });
                     });
                 });
@@ -141,7 +147,7 @@ export class FireBaseServiceTest {
                 this.createPostTest( this.dataIDs[index], key => {
                     this.logout( () =>{   
                         index++;            
-                        this.testUsers( index, doneCallback );
+                        this.testPosts( index, doneCallback );
                     });
                 });
             }
@@ -188,13 +194,6 @@ export class FireBaseServiceTest {
         });
     }
 
-    updatePostTest( id, callback ) {
-        this.createPostTest( id, data => {
-            this.update( id, data.key, "test/posts", () => {
-
-            });
-        });
-    }
 
     /**
      * FireBaseService Module

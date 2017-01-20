@@ -9,7 +9,7 @@ import { FireBaseService } from '../../../app/firebase-service';
 
 export class BaseNav {
 
-    key;
+    key = null;
 
     constructor( private router: Router,
                  private fireService: FireBaseService ) { 

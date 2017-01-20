@@ -21,7 +21,7 @@ export class ForumCommentPage implements OnInit {
     user: USER_DATA;
     toggle: boolean = false;
     photoUrl = 'assets/image/user-profile.png';
-    key;
+    key = null;
     temp;    
 
     constructor( private router: Router, 
