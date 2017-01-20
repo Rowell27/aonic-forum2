@@ -34,20 +34,23 @@ export class LoginPage {
         });
     }
 
-    test(){
-        this.fireTest.test();
+    userTest(){
+        this.fireTest.userUnitTest();
     }
 
-    valdiateInput(){
-        if ( this.user.email == null || this.user.email == "" ) {
-            this.error = "No user email provided"
-            return false;
-        }
-        if ( this.user.password == null || this.user.password == "" ) {
-            this.error = "No user password provided"
-            return false;
-        }
+    postTest(){
+        this.fireTest.postUnitTest();
+    }
+
+    validateInput(){
+        if ( this.user.email == null || this.user.email == "" ) return this.validateError('Email');
+        if ( this.user.password == null || this.user.password == "" ) return this.validateError('Password');
         return true;
+    }
+
+    validateError( value ){
+        alert( value + " is not provided!" );
+        return false;
     }
 
     checkLoggedIn(){
@@ -58,7 +61,7 @@ export class LoginPage {
     }
 
     onClickLoginUser(){
-        if ( this.valdiateInput() == false ) return;
+        if ( this.validateInput() == false ) return;
         this.error = "";
         this.fireService.login( this.user, () =>{
             this.router.navigate( ['/forum-home'] ); 

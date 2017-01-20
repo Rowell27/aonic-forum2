@@ -111,7 +111,7 @@ export class FireBaseService {
         auth().createUserWithEmailAndPassword( user.email, user.password )
               .then( authData =>{
                   this.key = authData['uid']
-                //   console.log( "AuthData: ", this.key );
+                  console.log( "AuthData: ", this.key );
                   delete user.password;
                   this.createUser( user, this.key, refName, () => {
                         // console.log( "User to Push", JSON.stringify(user) );
@@ -181,6 +181,7 @@ export class FireBaseService {
            .set( data )
            .then( () => {
                console.info( "Successfully pushed data ", data );
+               console.log( "Returned values: " + JSON.stringify(this.returnedValues) );
                successCallback( this.returnedValues );
            } )
            .catch( error =>  failureCallback( error ) ); 

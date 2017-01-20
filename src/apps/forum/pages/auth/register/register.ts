@@ -63,27 +63,18 @@ export class RegisterPage {
     }
 
     validateInput(){
-        if ( this.user.name == null || this.user.name == "" ) {
-            this.error = "No user name provided"
-            return false;
-        }
-        if ( this.user.address == null || this.user.name == "" ) {
-            this.error = "No address provided"
-            return false;
-        }
-        if ( this.user.mobile == null || this.user.name == "" ) {
-            this.error = "No mobile provided"
-            return false;
-        }
-        if ( this.user.email == null || this.user.name == "" ) {
-            this.error = "No email provided"
-            return false;
-        }
-        if ( this.user.password == null || this.user.name == "" ) {
-            this.error = "No password provided"
-            return false;
-        }
+        if ( this.user.name == null || this.user.name == "" ) return this.validateError('Username');
+        if ( this.user.mobile == null || this.user.mobile == "" ) return this.validateError('Mobile');
+        if ( this.user.address == null || this.user.address == "" ) return this.validateError('Address');
+        if ( this.user.email == null || this.user.email == "" ) return this.validateError('Email');
+        if ( this.user.password == null || this.user.password == "" ) return this.validateError('Password');
+      
         return true;
+    }
+
+    validateError( value ){
+        alert( value + " is not provided!" );
+        return false;
     }
 
     deletePhoto( ref ){

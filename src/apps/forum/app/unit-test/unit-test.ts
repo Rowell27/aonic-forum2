@@ -8,36 +8,44 @@ import { Test as test } from './test';
 export class FireBaseServiceTest {
 
     key;
-    userIDs = [];
-    data: USER_DATA = <USER_DATA> {}
+    dataIDs = [];
+    userData: USER_DATA = <USER_DATA> {};
 
-    constructor( private fireService: FireBaseService ) { }
+    constructor( private fireService: FireBaseService ) { 
+    }
 
-    test( ){ 
-        this.initializeFiftyUsers();
+    userUnitTest( ){ 
+        this.initializeFiftyIDs();
         this.testUsers(0, ()=>{
             console.log( "Test finished..." )
         });
+        // this.addUserPhotoTest( "username1", () => console.log("Ok!") )
     }
 
-    initializeFiftyUsers(){
+    postUnitTest(){
+        this.initializeFiftyIDs();
+        this.testPost(0, () => { });
+    }
+
+    initializeFiftyIDs(){
         for( let ctr = 1; ctr <=12; ctr ++ ){
             let id = 'username' + ctr;
-            this.userIDs.push(id);
+            this.dataIDs.push(id);
         }
-        console.info( "Array length: ", this.userIDs.length );
+        console.info( "Array length: ", this.dataIDs.length );
     }
+
 
     testUsers( index: number, doneCallback ){
 
         console.log('Index:', index);
-        let len = this.userIDs.length - 1;
-        if ( index < len ){
+        let len = this.dataIDs.length - 1;
+        if ( index <= len ){
             // If user is from every 4th and every 3rd
             if( index !=0 && index % 3 === 0 && index % 2 === 0){
                 console.log("Counter " + index);
-                this.createUserTest( this.userIDs[index], key => {
-                    this.update( this.userIDs[index], key, 'test/users', () => {
+                this.createUserTest( this.dataIDs[index], key => {
+                    this.update( this.dataIDs[index], key, 'test/users', () => {
                         this.resign( key, 'test/users', () => {
                             index++;
                             this.testUsers( index, doneCallback );
@@ -48,7 +56,7 @@ export class FireBaseServiceTest {
             // If user is from every 10th only
             else if( index !=0 && index % 4 === 0 ){
                 console.log("Counter " + index);
-                this.addUserPhotoTest( this.userIDs[index], () => {
+                this.addUserPhotoTest( this.dataIDs[index], () => {
                     this.logout( () => {
                         index++;
                         this.testUsers( index, doneCallback );
@@ -58,25 +66,28 @@ export class FireBaseServiceTest {
             // If user is from every 4th only
             else if( index !=0 && index % 3 === 0 ){
                 console.log("Counter " + index);
-                this.updateUserTest( this.userIDs[index], () => {
-                    this.logout( () => {
-                        index++;
-                        this.testUsers( index, doneCallback );
-                    });
+                this.createUserTest( this.dataIDs[index], key => {
+                    this.update( this.dataIDs[index], key, 'test/users', () => {
+                        this.logout( () => {
+                            index++;
+                            this.testUsers( index, doneCallback );
+                        });
+                    });   
                 });
             }
             // If user is from every 3rd only
             else if( index !=0 &&  index % 2 === 0 ){
                 console.log("Counter " + index);
-                this.deleteUserTest( this.userIDs[index], () => {
-                    // this.userIDs.slice(index, 1);
-                    index++;
-                    this.testUsers( index, doneCallback );
+                this.createUserTest( this.dataIDs[index], key => {
+                    this.resign( key, 'test/users', () => {
+                        index++;
+                        this.testUsers( index, doneCallback );
+                    });
                 });
             } 
             // If user did not met any of the condition(s) above..
             else {
-                this.register( this.userIDs[index], () => {    
+                this.register( this.dataIDs[index], () => {    
                     this.logout( () =>{   
                         index++;            
                         this.testUsers( index, doneCallback );
@@ -85,24 +96,59 @@ export class FireBaseServiceTest {
             }
         } 
         else {
-            doneCallback();
+            doneCallback(); 
         }
     }
+
+    testPost( index: number, doneCallback ){
+
+        let len = this.dataIDs.length - 1;
+        if ( index <= len ){
+            
+            if( index !=0 && index % 2 === 0 && index % 3 === 0 ) {
+                this.createPostTest( this.dataIDs[index], data => {
+                        this.update( this.dataIDs[index], data.key, 'test/users', () => {
+                            this
+                        });   
+                });
+            } else if( index !=0 && index % 3 === 0){
+                console.log("Counter " + index);
+                this.createPostTest( this.dataIDs[index], data => {
+                    this.update( this.dataIDs[index], data.key, "test/posts", () => {
+                        this.logout( () =>{   
+                            index++;            
+                            this.testUsers( index, doneCallback );
+                        });
+                    });
+                });
+            } else  if( index !=0 && index % 2 === 0) {
+                this.createPostTest( this.dataIDs[index], data => {
+                    this.delete( this.dataIDs[index], data.key, "test/posts", () => {
+                        this.logout( () =>{   
+                            index++;            
+                            this.testUsers( index, doneCallback );
+                        });
+                    });
+                });
+            } else{
+                this.createPostTest( this.dataIDs[index], key => {
+                    this.logout( () =>{   
+                        index++;            
+                        this.testUsers( index, doneCallback );
+                    });
+                });
+            }
+            
+        } else{
+            doneCallback();
+        }
+
+    }
+
 
     /**
      * Unit Test Module for Users
      */
-    deleteAll( index = 0, callback ){
-        if(index < this.userIDs.length){
-             this.deleteUserTest( this.userIDs[index], () => {
-                index++;
-                this.userIDs.slice(index, 1);
-                this.deleteAll( index, callback );
-             });
-        } else{
-            callback();
-        }
-    }
 
     createUserTest( id, callback: (key) => void ){
         this.register( id, () => {
@@ -122,85 +168,86 @@ export class FireBaseServiceTest {
         })
     }
 
-    updateUserTest( id, callback ){
+    createPostTest( id, callback ) {
         this.createUserTest( id, key => {
-            this.update( id, key, 'test/users', () => {
-                callback();
+            let data = {
+                content: id + "'s post.",
+                created: Date.now(),
+                uid: key,
+            }
+            this.create( data, "test/post", data => {
+                callback(data);
             });
         });
     }
 
-    deleteUserTest( id, callback) {
-        this.createUserTest( id, key => {
-            this.resign( key, 'test/users', () => {
-                callback();
+    updatePostTest( id, callback ) {
+        this.createPostTest( id, data => {
+            this.update( id, data.key, "test/posts", () => {
+
             });
         });
-        
     }
-    
 
     /**
      * FireBaseService Module
      * */
-    register( id,  callback, uploaded?) {
-            this.data['name'] = id;
-            this.data['mobile'] = id;
-            this.data['address'] = id;
-            this.data['email'] = id + "@gmail.com";
-            this.data['password'] = id;
+    register( id, callback, uploaded?) {
+            this.userData['name'] = id;
+            this.userData['mobile'] = id;
+            this.userData['address'] = id;
+            this.userData['email'] = id + "@gmail.com";
+            this.userData['password'] = id;
             if( uploaded ){
-                this.data['photoUrl'] = uploaded.url;
-                this.data['photoRef'] = uploaded.ref;
+                this.userData['photoUrl'] = uploaded.url;
+                this.userData['photoRef'] = uploaded.ref;
             }
-            // else {
-            //     this.data['photoUrl'] = "";
-            //     this.data['photoRef'] = "";
-            // }
             
-        this.fireService.register( this.data, "test/users", () => {
+        this.fireService.register( this.userData, "test/users", () => {
             if( callback )callback();
-            test.passed( "Register success! on email " + this.data.email );
+            test.passed( "Register success! on email " + this.userData.email );
         }, error => {
-            test.failed( "Register failed! on email " + this.data.email + " error: " + error);
+            test.failed( "Register failed! on email " + this.userData.email + " error: " + error);
             if( callback )callback();
             else console.log("No callback")
         });
     }
 
     login( id, callback ){
-            this.data['email'] = id + "@gmail.com";
-            this.data['password'] = id;
+            this.userData['email'] = id + "@gmail.com";
+            this.userData['password'] = id;
 
-        this.fireService.login( this.data, () => {
+        this.fireService.login( this.userData, () => {
             callback();
-            test.passed( "Log-in success! on email " + this.data.email );
+            test.passed( "Log-in success! on email " + this.userData.email );
         }, error => {
-            test.failed( "Log-in failed! on email " + this.data.email );
+            test.failed( "Log-in failed! on email " + this.userData.email );
             callback();
         });
     }
 
     checkLogin( id, callback ){
         this.fireService.isLoggedIn( key => {
-            callback( key );
             test.passed( "Check Login success! on ID: " + id + " UID: " + key );
+            callback( key );
         }, error => {
             test.failed( "Check Login failed!" );
             callback();
-        } );
+        });
     }
 
-    update( id, key, refName, callback ){
-        this.data['name'] = id + "name";
-        this.data['mobile'] = id + "mobile";
-        this.data['address'] = id + "address";
+    
 
-        this.fireService.update( this.data, key, refName, () => {
+    update( id, key, refName, callback ){
+        this.userData['name'] = id + "name";
+        this.userData['mobile'] = id + "mobile";
+        this.userData['address'] = id + "address";
+
+        this.fireService.update( this.userData, key, refName, () => {
             callback();
-            test.passed( "Update success! on name " + this.data.name );
+            test.passed( "Update success! on name " + this.userData.name );
         }, error => {
-            test.failed( "Update failed! on name " + this.data.name );
+            test.failed( "Update failed! on name " + this.userData.name );
             callback();
         });
     }
@@ -242,7 +289,42 @@ export class FireBaseServiceTest {
         });
     }
 
+    delete( id, key, refName, callback ){
+        this.fireService.delete( key, refName, () => {
+            test.passed( "Delete success on post/comment" + id )
+        }, error => {
+            test.passed( "Delete success on post/comment" + id )
+        });
+    }
+
+    create( data, refName, callback ){
+        this.fireService.create( data, refName, data => {
+            test.passed( "Create data success!" );
+            callback(data);
+        }, error => {
+            test.failed( "Create data failed!" );
+            callback();
+        });
+    }
+
+    updatePost( id, key, refName, callback ){
+        let data = {
+            content: id + " updated",
+            created: Date.now(),
+            uid: key,
+        }
+
+        this.fireService.update( data, key, refName, () => {
+            test.passed( "Update data success! on : " + id );
+            callback(data);
+        }, error => {
+            test.failed( "Update data failed! on : " + id );
+            callback();
+        });
+    }
+
     addPhoto( callback ){
+
         let data = {
             file: 'assets/image/user-profile.png',
             path: "images/" + Date.now() + "/user-profile.png"
