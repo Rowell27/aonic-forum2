@@ -17,7 +17,7 @@ export class FireBaseServiceTest {
     userUnitTest( ){ 
         this.initializeFiftyIDs();
         this.testUsers(0, ()=>{
-            console.log( "Test finished..." )
+            console.log( "User Test finished..." )
         });
         // this.addUserPhotoTest( "username1", () => console.log("Ok!") )
     }
@@ -25,12 +25,12 @@ export class FireBaseServiceTest {
     postUnitTest(){
         this.initializeFiftyIDs();
         this.testPosts(0, () => {
-            console.log( "Test finished..." )
+            console.log( "Post Test finished..." )
         });
     }
 
     initializeFiftyIDs(){
-        for( let ctr = 1; ctr <=5; ctr ++ ){
+        for( let ctr = 1; ctr <=12; ctr ++ ){
             let id = 'username' + ctr;
             this.dataIDs.push(id);
         }
@@ -112,8 +112,11 @@ export class FireBaseServiceTest {
 
         let len = this.dataIDs.length - 1;
         if ( index <= len ){
+        console.log('Index:', index);
+        console.log('Array Length: ', len);
             
             if( index !=0 && index % 2 === 0 && index % 3 === 0 ) {
+                console.log('Index:', index);
                 this.createPostTest( this.dataIDs[index], data => {
                     this.updatePost( this.dataIDs[index], data.key, 'test/posts', () => {
                         this.delete( this.dataIDs[index], data.key, "test/posts", () => {
@@ -135,6 +138,7 @@ export class FireBaseServiceTest {
                     });
                 });
             } else  if( index !=0 && index % 2 === 0) {
+                console.log("Counter " + index);
                 this.createPostTest( this.dataIDs[index], data => {
                     this.delete( this.dataIDs[index], data.key, "test/posts", () => {
                         this.logout( () =>{   
@@ -144,6 +148,7 @@ export class FireBaseServiceTest {
                     });
                 });
             } else{
+                console.log("Counter " + index);
                 this.createPostTest( this.dataIDs[index], key => {
                     this.logout( () =>{   
                         index++;            
@@ -296,10 +301,11 @@ export class FireBaseServiceTest {
     }
 
     delete( id, key, refName, callback ){
+        console.log( "This post's key: " + key );
         this.fireService.delete( key, refName, () => {
-            test.passed( "Delete success on post/comment" + id )
+            test.passed( "Delete success on post/comment " + id )
         }, error => {
-            test.passed( "Delete success on post/comment" + id )
+            test.passed( "Delete success on post/comment " + id )
         });
     }
 
