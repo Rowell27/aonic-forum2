@@ -42,12 +42,14 @@ export class FireBaseServiceTest {
      */
     testUsers( index: number, doneCallback ){
 
+        let len = this.dataIDs.length;
+        let counter = index + 1;
         console.log('Index:', index);
-        let len = this.dataIDs.length - 1;
+
         if ( index <= len ){
             // If user is from every 4th and every 3rd
-            if( index !=0 && index % 3 === 0 && index % 2 === 0){
-                console.log("Counter " + index);
+            if( counter !=0 && counter % 3 === 0 && counter % 4 === 0){
+                console.log("Counter " + counter);
                 this.createUserTest( this.dataIDs[index], key => {
                     this.update( this.dataIDs[index], key, 'test/users', () => {
                         this.resign( key, 'test/users', () => {
@@ -58,8 +60,8 @@ export class FireBaseServiceTest {
                 });
             }
             // If user is from every 10th only
-            else if( index !=0 && index % 4 === 0 ){
-                console.log("Counter " + index);
+            else if( counter !=0 && counter % 4 === 0 ){
+                console.log("Counter " + counter);
                 this.addUserPhotoTest( this.dataIDs[index], () => {
                     this.logout( () => {
                         index++;
@@ -68,8 +70,8 @@ export class FireBaseServiceTest {
                 });
             }
             // If user is from every 4th only
-            else if( index !=0 && index % 3 === 0 ){
-                console.log("Counter " + index);
+            else if( counter !=0 && counter % 4 === 0 ){
+                console.log("Counter " + counter);
                 this.createUserTest( this.dataIDs[index], key => {
                     this.update( this.dataIDs[index], key, 'test/users', () => {
                         this.logout( () => {
@@ -80,8 +82,8 @@ export class FireBaseServiceTest {
                 });
             }
             // If user is from every 3rd only
-            else if( index !=0 &&  index % 2 === 0 ){
-                console.log("Counter " + index);
+            else if( counter !=0 &&  counter % 3 === 0 ){
+                console.log("Counter " + counter);
                 this.createUserTest( this.dataIDs[index], key => {
                     this.resign( key, 'test/users', () => {
                         index++;
@@ -89,7 +91,7 @@ export class FireBaseServiceTest {
                     });
                 });
             } 
-            // If user did not met any of the condition(s) above..
+            // If user did not meet any of the condition(s) above..
             else {
                 this.register( this.dataIDs[index], () => {    
                     this.logout( () =>{   
@@ -110,13 +112,14 @@ export class FireBaseServiceTest {
      */
     testPosts( index: number, doneCallback ){
 
-        let len = this.dataIDs.length - 1;
-        if ( index <= len ){
+        let len = this.dataIDs.length;
+        let counter = index + 1;
         console.log('Index:', index);
-        console.log('Array Length: ', len);
-            
-            if( index !=0 && index % 2 === 0 && index % 3 === 0 ) {
-                console.log('Index:', index);
+
+        if ( index < len ){
+            //If post is from every 3rd and 4th
+            if( counter !=0 && counter % 3 === 0 && counter % 4 === 0 ) {
+                console.log('Counter:', counter);
                 this.createPostTest( this.dataIDs[index], data => {
                     this.updatePost( this.dataIDs[index], data.key, 'test/posts', () => {
                         this.delete( this.dataIDs[index], data.key, "test/posts", () => {
@@ -127,8 +130,10 @@ export class FireBaseServiceTest {
                         });
                     });   
                 });
-            } else if( index !=0 && index % 3 === 0){
-                console.log("Counter " + index);
+
+            //If post is from every 4th item.
+            } else if( counter !=0 && counter % 4 === 0){
+                console.log("Counter " + counter);
                 this.createPostTest( this.dataIDs[index], data => {
                     this.updatePost( this.dataIDs[index], data.key, "test/posts", () => {
                         this.logout( () =>{   
@@ -137,8 +142,10 @@ export class FireBaseServiceTest {
                         });
                     });
                 });
-            } else  if( index !=0 && index % 2 === 0) {
-                console.log("Counter " + index);
+
+            //If post is from every 3rd item
+            } else  if( counter !=0 && counter % 3 === 0) {
+                console.log("Counter " + counter);
                 this.createPostTest( this.dataIDs[index], data => {
                     this.delete( this.dataIDs[index], data.key, "test/posts", () => {
                         this.logout( () =>{   
@@ -147,8 +154,10 @@ export class FireBaseServiceTest {
                         });
                     });
                 });
+            
+            //If post did not meet any condition(s) above..
             } else{
-                console.log("Counter " + index);
+                console.log("Counter " + counter);
                 this.createPostTest( this.dataIDs[index], key => {
                     this.logout( () =>{   
                         index++;            
@@ -193,7 +202,7 @@ export class FireBaseServiceTest {
                 created: Date.now(),
                 uid: key,
             }
-            this.create( data, "test/post", data => {
+            this.create( data, "test/posts", data => {
                 callback(data);
             });
         });
@@ -303,9 +312,11 @@ export class FireBaseServiceTest {
     delete( id, key, refName, callback ){
         console.log( "This post's key: " + key );
         this.fireService.delete( key, refName, () => {
-            test.passed( "Delete success on post/comment " + id )
+            test.passed( "Delete success on post/comment " + id );
+            callback();
         }, error => {
-            test.passed( "Delete success on post/comment " + id )
+            test.passed( "Delete success on post/comment " + id );
+            callback();
         });
     }
 
